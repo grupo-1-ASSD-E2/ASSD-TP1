@@ -199,7 +199,7 @@
                 <widget class="QComboBox" name="param3Unit">
                  <item>
                   <property name="text">
-                   <string>deg</string>
+                   <string>°</string>
                   </property>
                  </item>
                 </widget>
@@ -253,7 +253,7 @@
                   </font>
                  </property>
                  <property name="text">
-                  <string>--&gt;</string>
+                  <string>Actualizar Xin</string>
                  </property>
                 </widget>
                </item>
@@ -311,7 +311,7 @@
               <enum>Qt::AutoText</enum>
              </property>
              <property name="pixmap">
-              <pixmap>pwm.jpg</pixmap>
+              <pixmap>C:/Users/pabli/Desktop/pwm.jpg</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
@@ -554,7 +554,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>--&gt;</string>
+                <string>Actualizar Xsamp</string>
                </property>
               </widget>
              </item>

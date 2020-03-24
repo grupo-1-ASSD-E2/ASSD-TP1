@@ -1,8 +1,12 @@
 from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUi
-
+import matplotlib.pyplot as plt
 
 # Clase UIWindow. Maneja lo relacionado con la ventana mostrada al usuario.
+from sympy.core.tests.test_sympify import numpy
+
+from GUI.BackEnd.AntiAliasFilter.AntiAliasFilter import AntiAliasFilter
+from GUI.BackEnd.Signal import SignalTypes, Signal
 
 
 class UIWindow(QMainWindow):
@@ -51,6 +55,9 @@ class UIWindow(QMainWindow):
 
         for unit in self.periodMultipliers:
             self.periodUnit.addItem(unit)
+
+        self.signal = None
+        self.samplingSignal = None
 
     def pulse_radio_toggled(self):
         if self.pulseRadio.isChecked():
@@ -151,10 +158,28 @@ class UIWindow(QMainWindow):
             self.param1Value.setVisible(True)
 
     def refresh_sample_clicked(self):
-        i = 0
+        self.samplingSignal = Signal(SignalTypes.SQUARE, period=self.periodValue.value() * self.periodMultipliers[
+            self.periodValue.currentText()],
+                            duty_cycle=self.dcValue.value() )
 
     def refresh_xin_clicked(self):
-        a = 0
+        self.signal = None
+        if self.pulseRadio.isChecked():
+            signal_type = SignalTypes.DELTADIRAC
+            self.signal = Signal(signal_type)
+        elif self.sineRadio.isChecked():
+            signal_type = SignalTypes.SINUSOIDAL
+            self.signal = Signal(signal_type, v_max=self.param1Value.value() * self.tensionMultipliers[
+                self.param1Unit.currentText()],
+                                 freq=self.param2Value.value() * self.frequencyMultipliers[
+                                     self.param2Unit.currentText()],
+                                 phase=self.param3Value.value() * self.phaseMultipliers[self.param3Unit.currentText()])
+        elif self.expRadio.isChecked():
+            signal_type = SignalTypes.EXPONENTIAL
+            self.signal = Signal(signal_type, v_max=self.param1Value.value() * self.tensionMultipliers[
+                self.param1Unit.currentText()],
+                                 period=self.param2Value.value() * self.periodMultipliers[
+                                     self.param2Unit.currentText()], )
 
     def analog_plot_clicked(self):
         i = 0
@@ -163,10 +188,13 @@ class UIWindow(QMainWindow):
         u = 0
 
     def anti_alias_plot_clicked(self):
-        a = 0
+        antiAlias = AntiAliasFilter()
+        antiAlias.plot_freq_response()
+
+        #self.signal.apply_filter(antiAlias)
 
     def xout_plot_clicked(self):
         i = 0
 
     def xin_plot_clicked(self):
-        a=0
+        a = 0
