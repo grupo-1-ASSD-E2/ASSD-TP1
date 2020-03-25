@@ -182,6 +182,7 @@ class UIWindow(QMainWindow):
                                      self.param2Unit.currentText()], )
 
     def analog_plot_clicked(self):
+
         i = 0
 
     def sample_hold_plot_clicked(self):
@@ -189,7 +190,7 @@ class UIWindow(QMainWindow):
 
     def anti_alias_plot_clicked(self):
         antiAlias = AntiAliasFilter()
-        antiAlias.plot_freq_response()
+        #antiAlias.plot_freq_response()
 
         #self.signal.apply_filter(antiAlias)
 

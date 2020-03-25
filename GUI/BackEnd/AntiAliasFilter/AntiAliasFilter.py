@@ -1,6 +1,7 @@
 from scipy import signal
 import matplotlib.pyplot as plt
 from sympy.core.tests.test_sympify import numpy
+import numpy as np
 
 
 class AntiAliasFilter:
@@ -14,12 +15,18 @@ class AntiAliasFilter:
         # For digital filters, Wn is normalized from 0 to 1, where 1 is the Nyquist frequency, pi radians/sample.
         # (Wn is thus in half-cycles / sample.)
         # For analog filters, Wn is an angular frequency (e.g. rad/s).
-        self.FreqAtFirstMinAttWn = 100
+        self.FreqAtFirstMinAttWn = 100000
 
         # {‘lowpass’, ‘highpass’, ‘bandpass’, ‘bandstop’}, optional
         self.filterType = 'lowpass'
 
         self.analogFilter = True
+
+
+        #Creo un coseno para probar el filtro
+        self.timeArray = np.arange(0, 0.0003, 0.000001)
+        self.cos = np.cos(self.timeArray*2*np.pi*10000)
+
 
         # Numerator (b) and denominator (a) polynomials of the IIR filter
         self.b, self.a = signal.cheby2(self.filter_order, self.minAttStopBand_dB, self.FreqAtFirstMinAttWn,
@@ -31,6 +38,29 @@ class AntiAliasFilter:
         # freqResponse : The frequency response.
         self.angularFreq, self.freqResponse = signal.freqs(self.b, self.a)
 
+        self.timeOut, self.signalOut, self.xOut  = signal.lsim((self.b,self.a),self.cos, self.timeArray)
+
+        plt.plot(self.timeOut, self.signalOut)
+
+        plt.title('Out')
+        plt.xlabel('Time')
+        plt.ylabel('V')
+        plt.margins(0, 0.1)
+        plt.grid(which='both', axis='both')
+
+        plt.show()
+
+        plt.plot(self.timeArray, self.cos)
+
+        plt.title('cos')
+        plt.xlabel('Time')
+        plt.ylabel('V')
+        plt.margins(0, 0.1)
+        plt.grid(which='both', axis='both')
+
+        plt.show()
+
+
     def apply_to_signal(self, sig):
         return signal.sosfilt(self.sos, sig)
 
@@ -38,10 +68,10 @@ class AntiAliasFilter:
         return self.angularFreq, self.freqResponse
 
     def plot_freq_response(self):
-        plt.plot(self.angularFreq, 20 * numpy.log10(abs(self.freqResponse)))
+        plt.plot(self.angularFreq / (2 * np.pi), 20 * numpy.log10(abs(self.freqResponse)))
         plt.xscale('log')
         plt.title('Chebyshev Type II frequency response (rs=40)')
-        plt.xlabel('Frequency [radians / second]')
+        plt.xlabel('Frequency [hz]')
         plt.ylabel('Amplitude [dB]')
         plt.margins(0, 0.1)
         plt.grid(which='both', axis='both')
