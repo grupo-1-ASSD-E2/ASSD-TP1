@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 # Clase UIWindow. Maneja lo relacionado con la ventana mostrada al usuario.
 from sympy.core.tests.test_sympify import numpy
 
-from GUI.BackEnd.AntiAliasFilter.AntiAliasFilter import AntiAliasFilter
-from GUI.BackEnd.Signal import SignalTypes, Signal
+from BackEnd.AntiAliasFilter.AntiAliasFilter import AntiAliasFilter
+from BackEnd.Signal import SignalTypes, Signal
 
 
 class UIWindow(QMainWindow):
