@@ -22,6 +22,8 @@ class AntiAliasFilter:
 
         self.analogFilter = True
 
+        self.activated = True
+
 
         #Creo un coseno para probar el filtro
         self.timeArray = np.arange(0, 0.0003, 0.000001)
@@ -60,9 +62,12 @@ class AntiAliasFilter:
 
         plt.show()
 
+    def desactivate(self):
+        self.activated = False
 
-    def apply_to_signal(self, sig):
+    def apply_to_signal(self, signalin, timein):
         return signal.sosfilt(self.sos, sig)
+
 
     def get_filter_freq_response(self):
         return self.angularFreq, self.freqResponse

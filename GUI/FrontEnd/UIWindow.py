@@ -58,6 +58,8 @@ class UIWindow(QMainWindow):
         self.signal = None
         self.samplingSignal = None
 
+        
+
     def pulse_radio_toggled(self):
         if self.pulseRadio.isChecked():
             self.pulseRadio.setChecked(True)
@@ -191,7 +193,7 @@ class UIWindow(QMainWindow):
         antiAlias = AntiAliasFilter()
         #antiAlias.plot_freq_response()
 
-        #self.signal.apply_filter(antiAlias)
+        #antiAlias.apply_filter(signal)
 
     def xout_plot_clicked(self):
         i = 0
