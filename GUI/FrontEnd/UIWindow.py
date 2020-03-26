@@ -2,19 +2,18 @@ from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUi
 import matplotlib.pyplot as plt
 
-# Clase UIWindow. Maneja lo relacionado con la ventana mostrada al usuario.
-from sympy.core.tests.test_sympify import numpy
+
 
 from BackEnd.AntiAliasFilter.AntiAliasFilter import AntiAliasFilter
 from BackEnd.Signal import SignalTypes, Signal
 
-
+# Clase UIWindow. Maneja lo relacionado con la ventana mostrada al usuario.
 class UIWindow(QMainWindow):
 
     def __init__(self):  # Conecta los componentes del .ui realizado en QT con el programa en python
         QMainWindow.__init__(self)
         self.program_state = {}
-        loadUi('samplingui.ui', self)
+        loadUi('FrontEnd/samplingui.ui', self)
 
         self.setWindowTitle("Sampling Tool")
         self.refreshSampleButton.clicked.connect(self.refresh_sample_clicked)
