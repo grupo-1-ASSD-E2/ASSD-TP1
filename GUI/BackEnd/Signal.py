@@ -1,29 +1,42 @@
-from scipy import signal
 from enum import Enum
-import matplotlib.pyplot as plt
-
-from sympy.core.tests.test_sympify import numpy
+import numpy as np
 
 
 class Signal:
-    def __init__(self, signal_type, freq=-1, period=-1, v_max=-1, phase=0, duty_cycle= 50):
+    def __init__(self, description_text="", signal_type=4):
+        self.timeValues = []
+        self.yValues = []
         self.signalType = signal_type
-        self.freq = freq  # hz
-        self.period = period  # seconds
-        self.vMax = v_max  # volts
-        self.phase = phase
-        self.dutyCycle = duty_cycle
+        self.description = description_text
 
-    def apply_filter(self, filter):
-        t = numpy.linspace(0, 1, 1000, False)
-        sig = numpy.cos(2 * numpy.pi * self.freq * t + self.phase)
+    # todo
+    def get_frequency_spectrum(self):
+        frequency_values = []  # Hz
+        y_values = []  # W
 
-        filtered = filter.apply_to_signal(sig)
+        return frequency_values, y_values
+
+    def create_cos_signal(self, hz_frequency, amplitude, phase=0):
+        self.timeValues = np.arange(0, 0.0003, 0.000001)
+        self.yValues = amplitude * np.cos(self.timeArray * 2 * np.pi * hz_frequency + phase)
+        self.signalType = SignalTypes.SINUSOIDAL
+
+    def create_exp_signal(self, v_max, period):
+        # todo
+        a = 0
+
+    def create_dirac_signal(self):
+        # todo
+        i = 0
+
+    def create_square_signal(self):
+        # todo
+        i = 0
 
 
 class SignalTypes(Enum):
     SINUSOIDAL = 0,
     EXPONENTIAL = 1,
-    DELTADIRAC = 2,
-    SQUARE = 3
-
+    DELTA_DIRAC = 2,
+    SQUARE = 3,
+    CUSTOM = 4

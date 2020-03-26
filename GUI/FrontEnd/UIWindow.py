@@ -1,11 +1,10 @@
 from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUi
-import matplotlib.pyplot as plt
-
 
 from BackEnd.AntiAliasFilter.AntiAliasFilter import AntiAliasFilter
-from BackEnd.recoveryFilter import recoveryFilter
+from BackEnd.RecoveryFilter.RecoveryFilter import RecoveryFilter
 from BackEnd.Signal import SignalTypes, Signal
+
 
 # Clase UIWindow. Maneja lo relacionado con la ventana mostrada al usuario.
 class UIWindow(QMainWindow):
@@ -15,6 +14,22 @@ class UIWindow(QMainWindow):
         self.program_state = {}
         loadUi('FrontEnd/samplingui.ui', self)
 
+        self.minTension = 1
+        self.minFreq = 1
+        self.minPhase = 0
+        self.minPeriod = 1
+        self.minDC = 1
+
+        self.__window_qt_configuration__()
+
+        self.xinSignal = Signal()
+        self.samplingSignal = Signal()
+
+        # inicializo clases
+        self.antiAlias = AntiAliasFilter()
+        self.recovery = RecoveryFilter()
+
+    def __window_qt_configuration__(self):
         self.setWindowTitle("Sampling Tool")
         self.refreshSampleButton.clicked.connect(self.refresh_sample_clicked)
         self.pulseRadio.toggled.connect(self.pulse_radio_toggled)
@@ -43,12 +58,6 @@ class UIWindow(QMainWindow):
                                   "ms": 1 / 1000,
                                   "s": 1}
 
-        self.minTension = 1
-        self.minFreq = 1
-        self.minPhase = 0
-        self.minPeriod = 1
-        self.minDC = 1
-
         self.periodValue.setMinimum(self.minPeriod)
         self.dcValue.setMinimum(self.minDC)
         self.periodValue.setValue(self.minPeriod)
@@ -58,15 +67,6 @@ class UIWindow(QMainWindow):
 
         for unit in self.periodMultipliers:
             self.periodUnit.addItem(unit)
-
-        self.signal = None
-        self.samplingSignal = None
-
-
-        #inicializo clases
-        self.antiAlias = AntiAliasFilter()
-        self.recovery = recoveryFilter()
-
 
     def pulse_radio_toggled(self):
         self.sineRadio.setChecked(False)
@@ -163,20 +163,19 @@ class UIWindow(QMainWindow):
     def refresh_sample_clicked(self):
         self.samplingSignal = Signal(SignalTypes.SQUARE, period=self.periodValue.value() * self.periodMultipliers[
             self.periodValue.currentText()],
-                            duty_cycle=self.dcValue.value() )
+                                     duty_cycle=self.dcValue.value())
 
     def refresh_xin_clicked(self):
-        self.signal = None
+        self.xinSignal = None
         if self.pulseRadio.isChecked():
             signal_type = SignalTypes.DELTADIRAC
-            self.signal = Signal(signal_type)
+            self.xinSignal = Signal(signal_type)
         elif self.sineRadio.isChecked():
-            signal_type = SignalTypes.SINUSOIDAL
-            self.signal = Signal(signal_type, v_max=self.param1Value.value() * self.tensionMultipliers[
-                self.param1Unit.currentText()],
-                                 freq=self.param2Value.value() * self.frequencyMultipliers[
-                                     self.param2Unit.currentText()],
-                                 phase=self.param3Value.value() * self.phaseMultipliers[self.param3Unit.currentText()])
+            self.xinSignal.create_cos_signal(self.param2Value.value() * self.frequencyMultipliers[
+                                     self.param2Unit.currentText()], self.param1Value.value() * self.tensionMultipliers[
+                                    self.param1Unit.currentText()],
+                                     phase=self.param3Value.value() * self.phaseMultipliers[self.param3Unit.currentText()] )
+
         elif self.expRadio.isChecked():
             signal_type = SignalTypes.EXPONENTIAL
             self.signal = Signal(signal_type, v_max=self.param1Value.value() * self.tensionMultipliers[
@@ -185,18 +184,18 @@ class UIWindow(QMainWindow):
                                      self.param2Unit.currentText()], )
 
     def analog_plot_clicked(self):
-        i=0
-        
+        i = 0
 
     def sample_hold_plot_clicked(self):
         u = 0
 
     def anti_alias_plot_clicked(self):
-         self.antiAlias.plot_signal()
-        #graficar aparte
-        #antiAlias.plot_freq_response()
+        self.antiAlias.plot_signal()
 
-        #antiAlias.apply_filter(signal)
+    # graficar aparte
+    # antiAlias.plot_freq_response()
+
+    # antiAlias.apply_filter(signal)
 
     def xout_plot_clicked(self):
         self.recovery.plot_signal()
@@ -209,10 +208,9 @@ class UIWindow(QMainWindow):
             self.antiAlias.deactivate_block(False)
         else:
             self.antiAlias.deactivate_block(True)
-        
 
     def sample_hold_check_clicked(self):
-        b=0
+        b = 0
 
     def recup_check_clicked(self):
         if self.recupCheck.isChecked():
@@ -221,4 +219,4 @@ class UIWindow(QMainWindow):
             self.recovery.deactivate_block(True)
 
     def analog_check_clicked(self):
-        i=0
+        i = 0

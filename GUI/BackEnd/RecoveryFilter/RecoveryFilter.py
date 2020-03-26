@@ -3,14 +3,16 @@ import matplotlib.pyplot as plt
 from sympy.core.tests.test_sympify import numpy
 import numpy as np
 
+from GUI.BackEnd.Filter import Filter
 
-class recoveryFilter:
+
+class RecoveryFilter(Filter):
     def __init__(self):
         self.blockActivated = True
         self.filter_order = 3
         self.minAttStopBand_dB = 40
 
-         # A scalar or length-2 sequence giving the critical frequencies.
+        # A scalar or length-2 sequence giving the critical frequencies.
         # For Type II filters, this is the point in the transition band at which the gain first reaches -rs.
         # For digital filters, Wn is normalized from 0 to 1, where 1 is the Nyquist frequency, pi radians/sample.
         # (Wn is thus in half-cycles / sample.)
@@ -22,10 +24,10 @@ class recoveryFilter:
 
         self.analogFilter = True
 
-        #señal de entrada al filtro como prueba
-        self.timeArray = np.arange(0, 0.0003, 0.000001 )
-        self.cos = np.cos(self.timeArray*2*np.pi*10000)
-        i = 0 
+        # señal de entrada al filtro como prueba
+        self.timeArray = np.arange(0, 0.0003, 0.000001)
+        self.cos = np.cos(self.timeArray * 2 * np.pi * 10000)
+        i = 0
         # Numerator (b) and denominator (a) polynomials of the IIR filter
         self.b, self.a = signal.cheby2(self.filter_order, self.minAttStopBand_dB, self.FreqAtFirstMinAttWn,
                                        self.filterType,
@@ -36,7 +38,7 @@ class recoveryFilter:
         # freqResponse : The frequency response.
         self.angularFreq, self.freqResponse = signal.freqs(self.b, self.a)
 
-        self.timeOut, self.signalOut, self.xOut  = signal.lsim((self.b,self.a),self.cos, self.timeArray)
+        self.timeOut, self.signalOut, self.xOut = signal.lsim((self.b, self.a), self.cos, self.timeArray)
 
     def plot_signal(self):
         if self.blockActivated:
@@ -57,25 +59,10 @@ class recoveryFilter:
             plt.show()
 
     def deactivate_block(self, deactivate):
-        if deactivate == True:
-            self.blockActivated = False
-        else:
-            self.blockActivated = True
+        self.blockActivated = not deactivate
 
-    def apply_to_signal(self, signalIn, timeArray):
-        return signal.lsim((self.b,self.a), signalIn, timeArray)
+    def apply_to_signal(self, signal_in):
+        return signal.lsim((self.b, self.a), signal_in.timeValues, signal_in.yValues)
 
     def get_filter_freq_response(self):
         return self.angularFreq, self.freqResponse
-
-    def plot_freq_response(self):
-        plt.plot(self.angularFreq / (2 * np.pi), 20 * numpy.log10(abs(self.freqResponse)))
-        plt.xscale('log')
-        plt.title('Chebyshev Type II frequency response (rs=40)')
-        plt.xlabel('Frequency [hz]')
-        plt.ylabel('Amplitude [dB]')
-        plt.margins(0, 0.1)
-        plt.grid(which='both', axis='both')
-        plt.axvline(100, color='green')  # cutoff frequency
-        plt.axhline(-40, color='green')  # rs
-        plt.show()
