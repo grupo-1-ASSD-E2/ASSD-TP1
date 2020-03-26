@@ -14,7 +14,7 @@ class UIWindow(QMainWindow):
     def __init__(self):  # Conecta los componentes del .ui realizado en QT con el programa en python
         QMainWindow.__init__(self)
         self.program_state = {}
-        loadUi('samplingui.ui', self)
+        loadUi('GUI/FrontEnd/samplingui.ui', self)
 
         self.setWindowTitle("Sampling Tool")
         self.refreshSampleButton.clicked.connect(self.refresh_sample_clicked)
