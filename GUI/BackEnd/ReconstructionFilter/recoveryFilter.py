@@ -25,7 +25,7 @@ class recoveryFilter:
         #señal de entrada al filtro como prueba
         self.timeArray = np.arange(0, 0.0003, 0.000001 )
         self.cos = np.cos(self.timeArray*2*np.pi*10000)
-
+        i = 0 
         # Numerator (b) and denominator (a) polynomials of the IIR filter
         self.b, self.a = signal.cheby2(self.filter_order, self.minAttStopBand_dB, self.FreqAtFirstMinAttWn,
                                        self.filterType,
