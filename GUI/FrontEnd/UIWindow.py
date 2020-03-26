@@ -3,8 +3,8 @@ from PyQt5.uic import loadUi
 import matplotlib.pyplot as plt
 
 
-
 from BackEnd.AntiAliasFilter.AntiAliasFilter import AntiAliasFilter
+from BackEnd.recoveryFilter import recoveryFilter
 from BackEnd.Signal import SignalTypes, Signal
 
 # Clase UIWindow. Maneja lo relacionado con la ventana mostrada al usuario.
@@ -13,7 +13,7 @@ class UIWindow(QMainWindow):
     def __init__(self):  # Conecta los componentes del .ui realizado en QT con el programa en python
         QMainWindow.__init__(self)
         self.program_state = {}
-        loadUi('FrontEnd/samplingui.ui', self)
+        loadUi('GUI/FrontEnd/samplingui.ui', self)
 
         self.setWindowTitle("Sampling Tool")
         self.refreshSampleButton.clicked.connect(self.refresh_sample_clicked)
@@ -26,6 +26,10 @@ class UIWindow(QMainWindow):
         self.sampleHoldPlotButton.clicked.connect(self.sample_hold_plot_clicked)
         self.xinPlotButton.clicked.connect(self.xin_plot_clicked)
         self.xoutPlotButton.clicked.connect(self.xout_plot_clicked)
+        self.antiAliasCheck.clicked.connect(self.anti_alias_check_clicked)
+        self.sampleholdCheck.clicked.connect(self.sample_hold_check_clicked)
+        self.recupCheck.clicked.connect(self.recup_check_clicked)
+        self.analogCheck.clicked.connect(self.analog_check_clicked)
 
         self.frequencyMultipliers = {"Hz": 1,
                                      "kHz": 1000,
@@ -58,9 +62,11 @@ class UIWindow(QMainWindow):
         self.signal = None
         self.samplingSignal = None
 
+        #inicializo clases
+        self.antiAlias = AntiAliasFilter()
+        self.recovery = recoveryFilter()
+
     def pulse_radio_toggled(self):
-        if self.pulseRadio.isChecked():
-            self.pulseRadio.setChecked(True)
         self.sineRadio.setChecked(False)
         self.expRadio.setChecked(False)
 
@@ -71,8 +77,6 @@ class UIWindow(QMainWindow):
         self.__disable_param_box__(3)
 
     def exp_radio_toggled(self):
-        if self.expRadio.isChecked():
-            self.expRadio.setChecked(True)
         self.sineRadio.setChecked(False)
         self.pulseRadio.setChecked(False)
 
@@ -97,8 +101,6 @@ class UIWindow(QMainWindow):
             self.param2Unit.addItem(unit)
 
     def sine_radio_toggled(self):
-        if self.sineRadio.isChecked():
-            self.sineRadio.setChecked(True)
         self.pulseRadio.setChecked(False)
         self.expRadio.setChecked(False)
 
@@ -181,20 +183,40 @@ class UIWindow(QMainWindow):
                                      self.param2Unit.currentText()], )
 
     def analog_plot_clicked(self):
-
-        i = 0
+        i=0
+        
 
     def sample_hold_plot_clicked(self):
         u = 0
 
     def anti_alias_plot_clicked(self):
-        antiAlias = AntiAliasFilter()
+         self.antiAlias.plot_signal()
+        #graficar aparte
         #antiAlias.plot_freq_response()
 
         #self.signal.apply_filter(antiAlias)
 
     def xout_plot_clicked(self):
-        i = 0
+        self.recovery.plot_signal()
 
     def xin_plot_clicked(self):
         a = 0
+
+    def anti_alias_check_clicked(self):
+        if self.antiAliasCheck.isChecked():
+            self.antiAlias.deactivate_block(False)
+        else:
+            self.antiAlias.deactivate_block(True)
+        
+
+    def sample_hold_check_clicked(self):
+        b=0
+
+    def recup_check_clicked(self):
+        if self.recupCheck.isChecked():
+            self.recovery.deactivate_block(False)
+        else:
+            self.recovery.deactivate_block(True)
+
+    def analog_check_clicked(self):
+        i=0
