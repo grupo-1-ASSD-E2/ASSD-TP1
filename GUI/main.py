@@ -1,6 +1,6 @@
 from PyQt5 import QtWidgets
 
-from UIWindow import UIWindow
+from FrontEnd.UIWindow import UIWindow
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
