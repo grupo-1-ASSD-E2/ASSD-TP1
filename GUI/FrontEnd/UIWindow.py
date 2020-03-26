@@ -13,7 +13,7 @@ class UIWindow(QMainWindow):
     def __init__(self):  # Conecta los componentes del .ui realizado en QT con el programa en python
         QMainWindow.__init__(self)
         self.program_state = {}
-        loadUi('GUI/FrontEnd/samplingui.ui', self)
+        loadUi('FrontEnd/samplingui.ui', self)
 
         self.setWindowTitle("Sampling Tool")
         self.refreshSampleButton.clicked.connect(self.refresh_sample_clicked)
@@ -62,9 +62,11 @@ class UIWindow(QMainWindow):
         self.signal = None
         self.samplingSignal = None
 
+
         #inicializo clases
         self.antiAlias = AntiAliasFilter()
         self.recovery = recoveryFilter()
+
 
     def pulse_radio_toggled(self):
         self.sineRadio.setChecked(False)
@@ -194,7 +196,7 @@ class UIWindow(QMainWindow):
         #graficar aparte
         #antiAlias.plot_freq_response()
 
-        #self.signal.apply_filter(antiAlias)
+        #antiAlias.apply_filter(signal)
 
     def xout_plot_clicked(self):
         self.recovery.plot_signal()
