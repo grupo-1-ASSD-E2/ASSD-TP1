@@ -22,8 +22,11 @@ class Signal:
         self.signalType = SignalTypes.SINUSOIDAL
 
     def create_exp_signal(self, v_max, period):
-        # todo
-        a = 0
+	#COMPLICADO, HAY QUE PENSAR LA FUNCION EN CONVOLUCION CON UN TREN DE DELTAS PARA LOGRAR LA "U" PERIODICA
+		self.timeValues = np.arange(0, 0.0003, 0.000001)
+		self.yValues = v_max * 
+        self.signalType =SignalTypes.EXPONENTIAL
+        
 
     def create_dirac_signal(self):
         # todo

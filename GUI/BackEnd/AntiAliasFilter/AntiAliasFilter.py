@@ -10,16 +10,11 @@ class AntiAliasFilter(Filter):
     def __init__(self):
         self.blockActivated = True
 
-        self.filter_order = 4
-        # The minimum attenuation required in the stop band. Specified in decibels, as a positive number.
-        self.minAttStopBand_dB = 40
 
         # A scalar or length-2 sequence giving the critical frequencies.
         # For Type II filters, this is the point in the transition band at which the gain first reaches -rs.
         # For digital filters, Wn is normalized from 0 to 1, where 1 is the Nyquist frequency, pi radians/sample.
         # (Wn is thus in half-cycles / sample.)
-        # For analog filters, Wn is an angular frequency (e.g. rad/s).
-        self.FreqAtFirstMinAttWn = 100000
 
         # {‘lowpass’, ‘highpass’, ‘bandpass’, ‘bandstop’}, optional
         self.filterType = 'lowpass'
@@ -31,9 +26,8 @@ class AntiAliasFilter(Filter):
         self.cos = np.cos(self.timeArray * 2 * np.pi * 10000)
 
         # Numerator (b) and denominator (a) polynomials of the IIR filter
-        self.b, self.a = signal.cheby2(self.filter_order, self.minAttStopBand_dB, self.FreqAtFirstMinAttWn,
-                                       self.filterType,
-                                       analog=self.analogFilter)
+        self.b = [4.0704e-27,0,1.0136e-17,0,6.3091e-9,0,1.122]
+		self.a = [4.1939e-21,1.1734e-16,7.9157e-13,3.3204e-9,9.0017e-6,0.018014,22.645,20400]
         self.sos = signal.cheby2(self.filter_order, self.minAttStopBand_dB, self.FreqAtFirstMinAttWn, self.filterType,
                                  analog=self.analogFilter, output="sos")
         # angularFreq : The angular frequencies at which h was computed.

@@ -195,7 +195,10 @@ class UIWindow(QMainWindow):
     # graficar aparte
     # antiAlias.plot_freq_response()
 
-    # antiAlias.apply_filter(signal)
+    # antiAlias.apply_filter(signal) 
+    
+
+
 
     def xout_plot_clicked(self):
         self.recovery.plot_signal()

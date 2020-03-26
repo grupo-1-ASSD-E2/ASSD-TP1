@@ -1,0 +1,13 @@
+LISTA DE COSAS PARA HACER:
+    - En cada filtro hacer la funcion apply_to_signal
+    - En clase Signal hacer funciones create_square, create_exp, etc
+    - En clase Signal get_frequency_spectrum
+    - Clases Oscilloscope.py y SpectrumAnalyzer.py
+            Tienen que tener funciones add_signal
+            SpectrumAnalyzer llama a signal_in.get_frequency_spectrum
+    - En UIWindow hacer las funciones que van llamando a los apply_to_signal de los filtros
+    - En QT Osciloscopio y analizador
+        Tienen que tener un lista de las descripciones de las senales y poder borrar la que quieras
+        Boton borrar todo
+	-armar los filtros con los valores reales
+	-investigar sobre sample and hold y analog switch
