@@ -38,9 +38,9 @@ class RecoveryFilter(Filter):
 
     def apply_to_signal(self, signal_in):
         if self.blockActivated:
-            return signal.lsim((self.b, self.a), signal_in.timeValues, signal_in.yValues)
-        else:
-            return  signal_in.timeValues, signal_in.yValues
+            tout, y, x = signal.lsim((self.b, self.a), signal_in.timeValues, signal_in.yValues)
+            signal_in.set_x_y_values(tout, y)
+       
 
     def get_filter_freq_response(self):
         return self.angularFreq, self.freqResponse

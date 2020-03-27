@@ -49,7 +49,6 @@ class UIWindow(QMainWindow):
         # inicializo clases
         self.antiAlias = AntiAliasFilter()
         self.recovery = RecoveryFilter()
-		self.signal = Signal()
 
     def __window_qt_configuration__(self):
         self.setWindowTitle("Sampling Tool")

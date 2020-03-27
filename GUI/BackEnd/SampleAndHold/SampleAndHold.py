@@ -18,22 +18,23 @@ class SampleAndHold(Filter):
         self.blockActivated = not deactivate
 
     def apply_to_signal(self, signal_in):
-        out_x_array = signal_in.timeValues
-        out_y_array = signal_in.yValues
+        if (self.blockActivated):
 
-        sample_time = 0
-        for (i in range(0, len(out_x_array))):
-            if (abs(out_x_array[i] - sample_time) < 0.00001):
-                out_y_array[i] = signal_in.yValues[i]
-                sample_time += self.samplingPeriod
-            else:
-                if (i>0):
-                    out_y_array[i] = out_y_array[i-1]
+            out_x_array = signal_in.timeValues
+            out_y_array = signal_in.yValues
 
-        return out_x_array, out_y_array
+            sample_time = 0
+            for (i in range(0, len(out_x_array))):
+                if (abs(out_x_array[i] - sample_time) < 0.00001):
+                    out_y_array[i] = signal_in.yValues[i]
+                    sample_time += self.samplingPeriod
+                else:
+                    if (i>0):
+                        out_y_array[i] = out_y_array[i-1]
 
-
-        return signal.lsim((self.b, self.a), signal_in.timeValues, signal_in.yValues)
+            signal_in.set_x_y_values(out_x_array, out_y_array)
+            signal_in.set_step_plot(True)
+        
 
     def get_filter_freq_response(self):
         return self.angularFreq, self.freqResponse
