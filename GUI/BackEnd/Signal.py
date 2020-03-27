@@ -67,13 +67,12 @@ class Signal:
         zeroIndex = -1
         found = False
 
-        while (!Found && i<len(self.timeArray)):
-            if (abs(self.timeArray[i]) <= 0.00001):
+        while not found and i<len(self.timeArray):
+            if abs(self.timeArray[i]) <= 0.00001:
                 Found = True
                 zeroIndex = i
             i+=1
-    
-		self.yValues = scipySignal.unit_impulse(len(self.timeArray), zeroIndex)
+        self.yValues = scipySignal.unit_impulse(len(self.timeArray), zeroIndex)
         
 
 	#periodo en s y dutycicle de 0 a 1

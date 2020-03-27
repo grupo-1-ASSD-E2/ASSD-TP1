@@ -200,7 +200,7 @@ class UIWindow(QMainWindow):
         self.xinSignal = None
         if self.pulseRadio.isChecked():
             
-            self.xinSignal = Signal(signal_type)
+            self.xinSignal.create_dirac_signal()
             self.xinSignal.add_description("Input: Pulse.")
         elif self.sineRadio.isChecked():
             freq = self.param2Value.value()
@@ -215,7 +215,7 @@ class UIWindow(QMainWindow):
             phaseMultText = self.param3Unit.currentText()
             phaseMultValue = self.phaseMultipliers[phaseMultText]
             self.xinSignal.create_cos_signal(freq * freqMultValue, amplitude * amplitudeMultValue, phase=phase * phaseMultValue)
-            self.xinSignal.add_description("Input: " + str(amplitude) + amplitudeMultText + "*cos(2π*" +str(freq) + freqMultText + " +" + str(phase) + phaseMultText +")") )
+            self.xinSignal.add_description("Input: " + str(amplitude) + amplitudeMultText + "*cos(2π*" +str(freq) + freqMultText + " +" + str(phase) + phaseMultText +")")
 
         elif self.expRadio.isChecked():
             signal_type = SignalTypes.EXPONENTIAL
