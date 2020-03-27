@@ -5,6 +5,8 @@ from BackEnd.AntiAliasFilter.AntiAliasFilter import AntiAliasFilter
 from BackEnd.RecoveryFilter.RecoveryFilter import RecoveryFilter
 from BackEnd.Signal import SignalTypes, Signal
 
+from GUI.BackEnd.AnalogSwitch.AnalogSwitch import AnalogSwitch
+from GUI.BackEnd.SampleAndHold.SampleAndHold import SampleAndHold
 from GUI.FrontEnd.Oscilloscope import Oscilloscope
 from GUI.FrontEnd.SpectrumAnalyzer import SpectrumAnalyzer
 
@@ -52,8 +54,8 @@ class UIWindow(QMainWindow):
         # inicializo clases
         self.antiAlias = AntiAliasFilter()
         self.recovery = RecoveryFilter()
-
-
+        self.sampleHold = SampleAndHold()
+        self.analogSwitch = AnalogSwitch()
 
     def __window_qt_configuration__(self):
         self.setWindowTitle("Sampling Tool")
@@ -226,10 +228,11 @@ class UIWindow(QMainWindow):
     # antiAlias.apply_filter(signal) 
 
     def xout_plot_clicked(self):
-        self.recovery.plot_signal()
+        a=0
 
     def xin_plot_clicked(self):
-        a = 0
+
+        self.oscilloscope.add_signal_to_oscilloscope(self.xinSignal)
 
     def anti_alias_check_clicked(self):
         if self.antiAliasCheck.isChecked():
@@ -238,7 +241,10 @@ class UIWindow(QMainWindow):
             self.antiAlias.deactivate_block(True)
 
     def sample_hold_check_clicked(self):
-        b = 0
+        if self.sampleholdCheck.isChecked():
+            self.sampleHold.deactivate_block(False)
+        else:
+            self.sampleHold.deactivate_block(True)
 
     def recup_check_clicked(self):
         if self.recupCheck.isChecked():
@@ -247,9 +253,12 @@ class UIWindow(QMainWindow):
             self.recovery.deactivate_block(True)
 
     def analog_check_clicked(self):
-        i = 0
+        if self.analogCheck.isChecked():
+            self.analogSwitch.deactivate_block(False)
+        else:
+            self.analogSwitch.deactivate_block(True)
 
     def testing_osc(self):
-        self.xinSignal.create_cos_signal(10000,5)
+        self.xinSignal.create_cos_signal(10000, 5)
         self.xinSignal.add_description("hola")
         self.oscilloscope.add_signal_to_oscilloscope(self.xinSignal)
