@@ -6,6 +6,26 @@ from BackEnd.RecoveryFilter.RecoveryFilter import RecoveryFilter
 from BackEnd.Signal import SignalTypes, Signal
 
 
+
+
+'''For ploting: def plot_signal(self):
+        if self.blockActivated:
+            plt.plot(self.timeOut, self.signalOut)
+            plt.title('Out')
+            plt.xlabel('Time')
+            plt.ylabel('V')
+            plt.margins(0, 0.1)
+            plt.grid(which='both', axis='both')
+            plt.show()
+        else:
+            plt.plot(self.timeArray, self.cos)
+            plt.title('cos')
+            plt.xlabel('Time')
+            plt.ylabel('V')
+            plt.margins(0, 0.1)
+            plt.grid(which='both', axis='both')
+            plt.show()'''
+
 # Clase UIWindow. Maneja lo relacionado con la ventana mostrada al usuario.
 class UIWindow(QMainWindow):
 
@@ -21,9 +41,10 @@ class UIWindow(QMainWindow):
         self.minDC = 1
 
         self.__window_qt_configuration__()
-
-        self.xinSignal = Signal()
-        self.samplingSignal = Signal()
+        
+        self.timeArray = np.arange(0, 0.0003, 0.000001)
+        self.xinSignal = Signal(self.timeArray)
+        self.samplingSignal = Signal(self.timeArray)
 
         # inicializo clases
         self.antiAlias = AntiAliasFilter()
@@ -201,7 +222,8 @@ class UIWindow(QMainWindow):
 
 
     def xout_plot_clicked(self):
-        self.recovery.plot_signal()
+        #self.recovery.plot_signal()
+		self.signal.create_exp_signal(1,10)
 
     def xin_plot_clicked(self):
         a = 0
@@ -223,3 +245,4 @@ class UIWindow(QMainWindow):
 
     def analog_check_clicked(self):
         i = 0
+
