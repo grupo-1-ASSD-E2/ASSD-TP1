@@ -30,7 +30,7 @@
        </font>
       </property>
       <property name="text">
-       <string>Oscilloscopio</string>
+       <string>Osciloscopio</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -95,7 +95,7 @@
   <customwidget>
    <class>GraphWidget</class>
    <extends>QWidget</extends>
-   <header location="global">graphwidget.h</header>
+   <header location="global">GUI/FrontEnd/graphwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

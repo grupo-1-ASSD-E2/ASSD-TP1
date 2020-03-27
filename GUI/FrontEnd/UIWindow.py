@@ -5,7 +5,7 @@ from BackEnd.AntiAliasFilter.AntiAliasFilter import AntiAliasFilter
 from BackEnd.RecoveryFilter.RecoveryFilter import RecoveryFilter
 from BackEnd.Signal import SignalTypes, Signal
 
-from GUI.FrontEnd import Oscilloscope
+from GUI.FrontEnd.Oscilloscope import Oscilloscope
 from GUI.FrontEnd.SpectrumAnalyzer import SpectrumAnalyzer
 
 '''For ploting: def plot_signal(self):
@@ -32,6 +32,8 @@ class UIWindow(QMainWindow):
 
     def __init__(self):  # Conecta los componentes del .ui realizado en QT con el programa en python
         QMainWindow.__init__(self)
+        self.spectrumAnalyzer = SpectrumAnalyzer()
+        self.oscilloscope = Oscilloscope()
         self.program_state = {}
         loadUi('FrontEnd/samplingui.ui', self)
 
@@ -51,8 +53,7 @@ class UIWindow(QMainWindow):
         self.antiAlias = AntiAliasFilter()
         self.recovery = RecoveryFilter()
 
-        self.oscilloscope = Oscilloscope()
-        self.spectrumAnalyzer = SpectrumAnalyzer()
+
 
     def __window_qt_configuration__(self):
         self.setWindowTitle("Sampling Tool")
@@ -210,6 +211,7 @@ class UIWindow(QMainWindow):
                                      self.param2Unit.currentText()], )
 
     def analog_plot_clicked(self):
+        self.testing_osc()
         i = 0
 
     def sample_hold_plot_clicked(self):
@@ -246,3 +248,8 @@ class UIWindow(QMainWindow):
 
     def analog_check_clicked(self):
         i = 0
+
+    def testing_osc(self):
+        self.xinSignal.create_cos_signal(10000,5)
+        self.xinSignal.add_description("hola")
+        self.oscilloscope.add_signal_to_oscilloscope(self.xinSignal)

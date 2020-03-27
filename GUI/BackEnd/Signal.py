@@ -73,6 +73,9 @@ class Signal:
         # todo
         i = 0
 
+    def add_description(self, description):
+        self.description  = description
+
 
 class SignalTypes(Enum):
     SINUSOIDAL = 0,
@@ -82,6 +85,6 @@ class SignalTypes(Enum):
     CUSTOM = 4
 
 
-class PlotingTypes(Enum):
+class PlotTypes(Enum):
     NORMAL = 0,
     STEP = 1
