@@ -73,6 +73,8 @@ class Signal:
                 zeroIndex = i
             i+=1
         self.yValues = scipySignal.unit_impulse(len(self.timeArray), zeroIndex)
+    
+
         
 
 	#periodo en s y dutycicle de 0 a 1

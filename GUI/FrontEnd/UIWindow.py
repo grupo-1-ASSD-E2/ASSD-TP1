@@ -37,7 +37,7 @@ class UIWindow(QMainWindow):
         self.spectrumAnalyzer = SpectrumAnalyzer()
         self.oscilloscope = Oscilloscope()
         self.program_state = {}
-        loadUi('GUI/FrontEnd/samplingui.ui', self)
+        loadUi('FrontEnd/samplingui.ui', self)
 
         self.minTension = 1
         self.minFreq = 1
@@ -49,7 +49,7 @@ class UIWindow(QMainWindow):
 
         self.timeArray = np.arange(-10, 10, 0.0001)
         self.xinSignal = Signal(self.timeArray)
-		self.auxSignal = self.xinSignal
+        self.auxSignal = self.xinSignal
         self.samplingSignal = Signal(self.timeArray)
 
         # inicializo clases
@@ -57,8 +57,6 @@ class UIWindow(QMainWindow):
         self.recovery = RecoveryFilter()
         self.sampleAndHold = SampleAndHold()
         self.analogSwitch = AnalogSwitch()
-
-
 
     def __window_qt_configuration__(self):
         self.setWindowTitle("Sampling Tool")
@@ -199,46 +197,49 @@ class UIWindow(QMainWindow):
     def refresh_xin_clicked(self):
         self.xinSignal = None
         if self.pulseRadio.isChecked():
-            
+
             self.xinSignal.create_dirac_signal()
             self.xinSignal.add_description("Input: Pulse.")
         elif self.sineRadio.isChecked():
             freq = self.param2Value.value()
-            freqMultText = self.param2Unit.currentText()
-            freqMultValue = self.frequencyMultipliers[freqMultText]
+            freq_mult_text = self.param2Unit.currentText()
+            freq_mult_value = self.frequencyMultipliers[freq_mult_text]
 
             amplitude = self.param1Value.value()
-            amplitudeMultText = self.param1Unit.currentText()
-            amplitudeMultValue = self.tensionMultipliers[amplitudeMultText]
+            amplitude_mult_text = self.param1Unit.currentText()
+            amplitude_mult_value = self.tensionMultipliers[amplitude_mult_text]
 
             phase = self.param3Value.value()
-            phaseMultText = self.param3Unit.currentText()
-            phaseMultValue = self.phaseMultipliers[phaseMultText]
-            self.xinSignal.create_cos_signal(freq * freqMultValue, amplitude * amplitudeMultValue, phase=phase * phaseMultValue)
-            self.xinSignal.add_description("Input: " + str(amplitude) + amplitudeMultText + "*cos(2π*" +str(freq) + freqMultText + " +" + str(phase) + phaseMultText +")")
+            phase_mult_text = self.param3Unit.currentText()
+            phase_mult_value = self.phaseMultipliers[phase_mult_text]
+            self.xinSignal.create_cos_signal(freq * freq_mult_value, amplitude * amplitude_mult_value,
+                                             phase=phase * phase_mult_value)
+            self.xinSignal.add_description(
+                "Input: " + str(amplitude) + amplitude_mult_text + "*cos(2π*" + str(freq) + freq_mult_text + " +" + str(
+                    phase) + phase_mult_text + ")")
 
         elif self.expRadio.isChecked():
             signal_type = SignalTypes.EXPONENTIAL
-            vmaxV = self.param1Value.value()
-            vmaxUnitText = self.param1Unit.currentText()
-            vmaxUnitValue = self.tensionMultipliers[vmaxUnitText]
+            vmax_v = self.param1Value.value()
+            vmax_unit_text = self.param1Unit.currentText()
+            vmax_unit_value = self.tensionMultipliers[vmax_unit_text]
 
-            periodValue = self.param2Value.value()
-            periodMultText = self.param2Unit.currentText()
-            periodMultValue = self.periodMultipliers[periodMultText]
-            self.signal = Signal(signal_type, v_max=vmaxV * vmaxUnitValue,
-                                 period=periodValue * periodMultValue )
-            self.xinSignal.add_description("Input: " + str(vmaxV) + vmaxUnitText + "*e^(-|t|), período: " + str(periodValue) + periodMultText )
-		self.auxSignal = self.xinSignal
+            period_value = self.param2Value.value()
+            period_mult_text = self.param2Unit.currentText()
+            period_mult_value = self.periodMultipliers[period_mult_text]
+            self.xinSignal.create_exp_signal(vmax_v * vmax_unit_value, period_value*period_mult_value)
 
+            self.xinSignal.add_description(
+                "Input: " + str(vmax_v) + vmax_unit_text + "*e^(-|t|), período: " + str(period_value) + period_mult_text)
+        self.auxSignal = self.xinSignal
 
-	def xin_plot_clicked(self):
-		self.oscilloscope.add_signal_to_oscilloscope(self.xinSignal)
+    def xin_plot_clicked(self):
+        self.oscilloscope.add_signal_to_oscilloscope(self.xinSignal)
 
-	def anti_alias_plot_clicked(self):
-		self.auxSignal = self.xinSignal
+    def anti_alias_plot_clicked(self):
+        self.auxSignal = self.xinSignal
+
         self.antiAlias.apply_to_signal(self.auxSignal)
-		
 
         aux_signal_description = self.auxSignal.description
         aux_signal_description = "AntiAlias OUT. " + aux_signal_description
@@ -246,10 +247,10 @@ class UIWindow(QMainWindow):
 
         self.oscilloscope.add_signal_to_oscilloscope(self.auxSignal)
 
-	def sample_hold_plot_clicked(self):
-		self.auxSignal = self.xinSignal
-		self.antiAlias.apply_to_signal(self.auxSignal)
-		self.sampleAndHold.apply_to_signal(self.auxSignal)
+    def sample_hold_plot_clicked(self):
+        self.auxSignal = self.xinSignal
+        self.antiAlias.apply_to_signal(self.auxSignal)
+        self.sampleAndHold.apply_to_signal(self.auxSignal)
 
         aux_signal_description = self.auxSignal.description
         aux_signal_description = "Sample & Hold OUT. " + aux_signal_description
@@ -258,10 +259,12 @@ class UIWindow(QMainWindow):
         self.oscilloscope.add_signal_to_oscilloscope(self.auxSignal)
 
     def analog_plot_clicked(self):
-		self.auxSignal = self.xinSignal
-		self.antiAlias.apply_to_signal(self.auxSignal)
-		self.sampleAndHold.apply_to_signal(self.auxSignal)
-		self.analogSwitch.apply_to_signal(self.auxSignal)
+        self.auxSignal = self.xinSignal
+
+        self.antiAlias.apply_to_signal(self.auxSignal)
+        self.sampleAndHold.apply_to_signal(self.auxSignal)
+
+        self.analogSwitch.apply_to_signal(self.auxSignal)
 
         aux_signal_description = self.auxSignal.description
         aux_signal_description = "Analog Switch OUT. " + aux_signal_description
@@ -269,19 +272,19 @@ class UIWindow(QMainWindow):
 
         self.oscilloscope.add_signal_to_oscilloscope(self.auxSignal)
 
-	def xout_plot_clicked(self):
-		self.auxSignal = self.xinSignal
+    def xout_plot_clicked(self):
+
+        self.auxSignal = self.xinSignal
+
         self.antiAlias.apply_to_signal(self.auxSignal)
-		self.sampleAndHold.apply_to_signal(self.auxSignal)
-		self.analogSwitch.apply_to_signal(self.auxSignal)
-		self.recovery.apply_to_signal(self.auxSignal)
+        self.sampleAndHold.apply_to_signal(self.auxSignal)
+        self.analogSwitch.apply_to_signal(self.auxSignal)
+        self.recovery.apply_to_signal(self.auxSignal)
 
         aux_signal_description = self.auxSignal.description
         aux_signal_description = "Xout Signal. " + aux_signal_description
         self.auxSignal.set_description(aux_signal_description)
-
-		self.oscilloscope.add_signal_to_oscilloscope(self.auxSignal)
-
+        self.oscilloscope.add_signal_to_oscilloscope(self.auxSignal)
 
     def anti_alias_check_clicked(self):
         if self.antiAliasCheck.isChecked():
@@ -295,11 +298,11 @@ class UIWindow(QMainWindow):
         else:
             self.sampleHold.deactivate_block(True)
 
-	def analog_check_clicked(self):
-		if self.analogCheck.isChecked():
-			self.analog.deactivate_block(False)
-		else:
-			self.analog.deactivate_block(True)
+    def analog_check_clicked(self):
+        if self.analogCheck.isChecked():
+            self.analog.deactivate_block(False)
+        else:
+            self.analog.deactivate_block(True)
 
     def recup_check_clicked(self):
         if self.recupCheck.isChecked():
@@ -307,11 +310,7 @@ class UIWindow(QMainWindow):
         else:
             self.recovery.deactivate_block(True)
 
-
-
-
     def testing_osc(self):
-        self.xinSignal.create_cos_signal(10000,5)
+        self.xinSignal.create_cos_signal(10000, 5)
         self.xinSignal.add_description("hola")
         self.oscilloscope.add_signal_to_oscilloscope(self.xinSignal)
-        
