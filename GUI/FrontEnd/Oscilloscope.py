@@ -69,10 +69,10 @@ class Oscilloscope(QMainWindow):
 
         for signal in self.plot_signals:
             if signal.plotType == PlotTypes.STEP:
-                self.oscilloscopeGraph.canvas.axes.step(signal.timeValues, signal.yValues
+                self.oscilloscopeGraph.canvas.axes.step(signal.timeArray, signal.yValues
                                                         , where='post', label=signal.description)
             else:
-                self.oscilloscopeGraph.canvas.axes.plot(signal.timeValues, signal.yValues, label=signal.description)
+                self.oscilloscopeGraph.canvas.axes.plot(signal.timeArray, signal.yValues, label=signal.description)
         self.oscilloscopeGraph.canvas.axes.axis('auto')
         self.oscilloscopeGraph.canvas.axes.legend(loc='best')
         self.oscilloscopeGraph.canvas.draw()  # Redraws

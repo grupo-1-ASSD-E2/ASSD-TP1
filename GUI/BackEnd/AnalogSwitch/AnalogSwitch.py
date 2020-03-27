@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from sympy.core.tests.test_sympify import numpy
 import numpy as np
 
-from GUI.BackEnd.Filter import Filter
+from BackEnd.Filter import Filter
 
 
 class AnalogSwitch(Filter):

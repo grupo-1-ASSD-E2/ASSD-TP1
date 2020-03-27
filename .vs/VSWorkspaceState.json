@@ -5,8 +5,9 @@
     "\\GUI\\BackEnd",
     "\\GUI\\BackEnd\\AntiAliasFilter",
     "\\GUI\\BackEnd\\RecoveryFilter",
+    "\\GUI\\BackEnd\\SampleAndHold",
     "\\GUI\\FrontEnd"
   ],
-  "SelectedNode": "\\GUI\\main.py",
+  "SelectedNode": "\\GUI\\BackEnd\\SampleAndHold\\SampleAndHold.py",
   "PreviewInSolutionExplorer": false
 }
