@@ -29,8 +29,6 @@ class RecoveryFilter(Filter):
         # freqResponse : The frequency response.
         self.angularFreq, self.freqResponse = signal.freqs(self.b, self.a)
 
-        self.timeOut, self.signalOut, self.xOut = signal.lsim((self.b, self.a), self.cos, self.timeArray)
-
 
 
     def deactivate_block(self, deactivate):

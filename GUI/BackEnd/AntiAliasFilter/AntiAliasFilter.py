@@ -23,7 +23,8 @@ class AntiAliasFilter(Filter):
 
         # Numerator (b) and denominator (a) polynomials of the IIR filter
         self.b = [4.0704e-27,0,1.0136e-17,0,6.3091e-9,0,1.122]
-		self.a = [4.1939e-21,1.1734e-16,7.9157e-13,3.3204e-9,9.0017e-6,0.018014,22.645,20400]
+
+        self.a = [4.1939e-21, 1.1734e-16, 7.9157e-13, 3.3204e-9, 9.0017e-6, 0.018014, 22.645, 20400]
         # angularFreq : The angular frequencies at which h was computed.
         # freqResponse : The frequency response.
         self.angularFreq, self.freqResponse = signal.freqs(self.b, self.a)

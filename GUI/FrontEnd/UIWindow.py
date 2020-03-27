@@ -1,12 +1,9 @@
 from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUi
-
+import numpy as np
 from BackEnd.AntiAliasFilter.AntiAliasFilter import AntiAliasFilter
 from BackEnd.RecoveryFilter.RecoveryFilter import RecoveryFilter
 from BackEnd.Signal import SignalTypes, Signal
-
-
-
 
 '''For ploting: def plot_signal(self):
         if self.blockActivated:
@@ -26,6 +23,7 @@ from BackEnd.Signal import SignalTypes, Signal
             plt.grid(which='both', axis='both')
             plt.show()'''
 
+
 # Clase UIWindow. Maneja lo relacionado con la ventana mostrada al usuario.
 class UIWindow(QMainWindow):
 
@@ -41,7 +39,7 @@ class UIWindow(QMainWindow):
         self.minDC = 1
 
         self.__window_qt_configuration__()
-        
+
         self.timeArray = np.arange(0, 0.0003, 0.000001)
         self.xinSignal = Signal(self.timeArray)
         self.samplingSignal = Signal(self.timeArray)
@@ -193,9 +191,10 @@ class UIWindow(QMainWindow):
             self.xinSignal = Signal(signal_type)
         elif self.sineRadio.isChecked():
             self.xinSignal.create_cos_signal(self.param2Value.value() * self.frequencyMultipliers[
-                                     self.param2Unit.currentText()], self.param1Value.value() * self.tensionMultipliers[
-                                    self.param1Unit.currentText()],
-                                     phase=self.param3Value.value() * self.phaseMultipliers[self.param3Unit.currentText()] )
+                self.param2Unit.currentText()], self.param1Value.value() * self.tensionMultipliers[
+                                                 self.param1Unit.currentText()],
+                                             phase=self.param3Value.value() * self.phaseMultipliers[
+                                                 self.param3Unit.currentText()])
 
         elif self.expRadio.isChecked():
             signal_type = SignalTypes.EXPONENTIAL
@@ -217,13 +216,10 @@ class UIWindow(QMainWindow):
     # antiAlias.plot_freq_response()
 
     # antiAlias.apply_filter(signal) 
-    
-
-
 
     def xout_plot_clicked(self):
-        #self.recovery.plot_signal()
-		self.signal.create_exp_signal(1,10)
+        # self.recovery.plot_signal()
+        self.signal.create_exp_signal(1, 10)
 
     def xin_plot_clicked(self):
         a = 0
@@ -245,4 +241,3 @@ class UIWindow(QMainWindow):
 
     def analog_check_clicked(self):
         i = 0
-
