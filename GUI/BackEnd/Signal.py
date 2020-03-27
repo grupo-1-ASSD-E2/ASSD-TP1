@@ -2,11 +2,11 @@ from enum import Enum
 import numpy as np
 import matplotlib.pyplot as plt
 from decimal import Decimal
+from scipy import signal as scipySignal
 
 
 class Signal:
     def __init__(self, timeArray, description_text="", signal_type=4, ploting_type=0):
-        self.timeValues = None
         self.yValues = []
         self.signalType = signal_type
         self.description = description_text
@@ -47,9 +47,6 @@ class Signal:
         self.timeValues = self.timeArray
         self.yValues = self.evaluate_periodic_exp(self.timeValues, period, v_max)
         self.signalType = SignalTypes.EXPONENTIAL
-        plt.plot(self.timeValues, self.yValues)
-
-        plt.show()
 
     def evaluate_periodic_exp(self, time_array: list, period, V_MAX):
         res = []
@@ -66,12 +63,22 @@ class Signal:
         return res
 
     def create_dirac_signal(self):
-        # todo
         i = 0
+        zeroIndex = -1
+        found = False
 
-    def create_square_signal(self):
-        # todo
-        i = 0
+        while (!Found && i<len(self.timeArray)):
+            if (abs(self.timeArray[i]) <= 0.00001):
+                Found = True
+                zeroIndex = i
+            i+=1
+    
+		self.yValues = scipySignal.unit_impulse(len(self.timeArray), zeroIndex)
+        
+
+	#periodo en s y dutycicle de 0 a 1
+    def create_square_signal(self, dutyCicle, period):
+        yValue = scipySignal.square(2 * np.pi * self.timeArray * 1/period, dutyCicle)
 
     def add_description(self, description):
         self.description  = description
