@@ -11,13 +11,21 @@ class Signal:
         self.signalType = signal_type
         self.description = description_text
         self.timeArray = timeArray
-        self.plotingType = ploting_type
+        self.plotType = ploting_type
+        self.oscilloscopePlotActivated = True  # Permite togglear una senal en el osciloscopio
+        self.spectrumAnalyzerPlotActivated = True  # Permite togglear una senal en el analizador de espectro
+
+    def toggle_oscilloscope_plot(self):
+        self.oscilloscopePlotActivated = not self.oscilloscopePlotActivated
+
+    def toggle_spectrum_analyzer_plot(self):
+        self.spectrumAnalyzerPlotActivated = not self.spectrumAnalyzerPlotActivated
 
     def set_step_plot(self, step_plot=True):
         if step_plot:
-            self.plotingType = PlotingTypes.STEP
+            self.plotType = PlotingTypes.STEP
         else:
-            self.plotingType = PlotingTypes.NORMAL
+            self.plotType = PlotingTypes.NORMAL
 
     # todo
     def get_frequency_spectrum(self):
@@ -43,7 +51,7 @@ class Signal:
 
         plt.show()
 
-    def evaluate_periodic_exp(self,time_array: list, period, V_MAX):
+    def evaluate_periodic_exp(self, time_array: list, period, V_MAX):
         res = []
         for t in time_array:
             t_in_oritginal_period = float(Decimal(str(t)) % Decimal(str(period)))

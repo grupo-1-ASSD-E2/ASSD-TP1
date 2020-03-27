@@ -5,6 +5,9 @@ from BackEnd.AntiAliasFilter.AntiAliasFilter import AntiAliasFilter
 from BackEnd.RecoveryFilter.RecoveryFilter import RecoveryFilter
 from BackEnd.Signal import SignalTypes, Signal
 
+from GUI.FrontEnd import Oscilloscope
+from GUI.FrontEnd.SpectrumAnalyzer import SpectrumAnalyzer
+
 '''For ploting: def plot_signal(self):
         if self.blockActivated:
             plt.plot(self.timeOut, self.signalOut)
@@ -47,6 +50,9 @@ class UIWindow(QMainWindow):
         # inicializo clases
         self.antiAlias = AntiAliasFilter()
         self.recovery = RecoveryFilter()
+
+        self.oscilloscope = Oscilloscope()
+        self.spectrumAnalyzer = SpectrumAnalyzer()
 
     def __window_qt_configuration__(self):
         self.setWindowTitle("Sampling Tool")
