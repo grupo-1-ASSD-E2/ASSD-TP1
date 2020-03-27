@@ -1,0 +1,12 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\GUI",
+    "\\GUI\\BackEnd",
+    "\\GUI\\BackEnd\\AntiAliasFilter",
+    "\\GUI\\BackEnd\\RecoveryFilter",
+    "\\GUI\\FrontEnd"
+  ],
+  "SelectedNode": "\\GUI\\BackEnd\\RecoveryFilter\\RecoveryFilter.py",
+  "PreviewInSolutionExplorer": false
+}
