@@ -1,6 +1,6 @@
 from enum import Enum
 import numpy as np
-import matplotlib as plt
+import matplotlib.pyplot as plt
 from decimal import Decimal
 
 
@@ -36,9 +36,7 @@ class Signal:
         self.signalType = SignalTypes.SINUSOIDAL
 
     def create_exp_signal(self, v_max, period):
-        # self.timeValues = self.timeArray dsp descomenta
-        self.timeValues = np.arange(0, 20, 0.5)
-
+        self.timeValues = self.timeArray
         self.yValues = self.evaluate_periodic_exp(self.timeValues, period, v_max)
         self.signalType = SignalTypes.EXPONENTIAL
         plt.plot(self.timeValues, self.yValues)

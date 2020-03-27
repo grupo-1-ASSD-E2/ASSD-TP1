@@ -218,8 +218,7 @@ class UIWindow(QMainWindow):
     # antiAlias.apply_filter(signal) 
 
     def xout_plot_clicked(self):
-        # self.recovery.plot_signal()
-        self.signal.create_exp_signal(1, 10)
+        self.recovery.plot_signal()
 
     def xin_plot_clicked(self):
         a = 0
