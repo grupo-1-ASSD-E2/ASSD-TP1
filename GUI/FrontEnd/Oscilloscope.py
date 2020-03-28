@@ -1,6 +1,5 @@
 from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUi
-import numpy as np
 
 from BackEnd.Signal import PlotTypes
 

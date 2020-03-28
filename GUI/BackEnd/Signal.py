@@ -16,16 +16,17 @@ class Signal:
         self.spectrumAnalyzerPlotActivated = True  # Permite togglear una senal en el analizador de espectro
 
     def copy_signal(self, signal):
-        self.yValues = signal.yValues
+        self.yValues = signal.yValues.copy()
         self.signalType = signal.signalType
         self.description = signal.description
-        self.timeArray = signal.timeArray
+        self.timeArray = signal.timeArray.copy()
         self.plotType = signal.plotType
         self.oscilloscopePlotActivated = signal.oscilloscopePlotActivated
         self.spectrumAnalyzerPlotActivated = signal.spectrumAnalyzerPlotActivated
 
     def toggle_oscilloscope_plot(self):
         self.oscilloscopePlotActivated = not self.oscilloscopePlotActivated
+
 
     def toggle_spectrum_analyzer_plot(self):
         self.spectrumAnalyzerPlotActivated = not self.spectrumAnalyzerPlotActivated
@@ -44,8 +45,8 @@ class Signal:
         return frequency_values, y_values
 
     def set_x_y_values(self, x_values, y_values):
-        self.timeArray = x_values
-        self.yArray = y_values
+        self.timeArray = x_values.copy()
+        self.yValues = y_values.copy()
 
     def create_cos_signal(self, hz_frequency, amplitude, phase=0):
 

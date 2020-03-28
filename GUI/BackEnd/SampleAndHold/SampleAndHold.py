@@ -3,13 +3,13 @@ import matplotlib.pyplot as plt
 from sympy.core.tests.test_sympify import numpy
 import numpy as np
 
-from GUI.BackEnd.Filter import Filter
+from BackEnd.Filter import Filter
 
 
 class SampleAndHold(Filter):
     def __init__(self):
         self.blockActivated = True
-        self.samplingPeriod = 0
+        self.samplingPeriod = 1
 
     def change_sampling_period(self, sampling_period):
         self.samplingPeriod = sampling_period
@@ -20,8 +20,8 @@ class SampleAndHold(Filter):
     def apply_to_signal(self, signal_in):
         if self.blockActivated:
 
-            out_x_array = signal_in.timeArray
-            out_y_array = signal_in.yValues
+            out_x_array = signal_in.timeArray.copy()
+            out_y_array = signal_in.yValues.copy()
 
             sample_time = 0
             for i in range(0, len(out_x_array)):
@@ -29,7 +29,7 @@ class SampleAndHold(Filter):
                     out_y_array[i] = signal_in.yValues[i]
                     sample_time += self.samplingPeriod
                 else:
-                    if (i > 0):
+                    if i > 0:
                         out_y_array[i] = out_y_array[i - 1]
 
             signal_in.set_x_y_values(out_x_array, out_y_array)

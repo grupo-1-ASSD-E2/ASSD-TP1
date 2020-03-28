@@ -47,7 +47,7 @@ class UIWindow(QMainWindow):
 
         self.__window_qt_configuration__()
 
-        self.timeArray = np.arange(-10, 10, 0.00001)
+        self.timeArray = np.arange(0, 10, 0.00001)
         self.xinSignal = Signal(self.timeArray)
         self.auxSignal = self.xinSignal
         self.samplingSignal = Signal(self.timeArray)
@@ -91,7 +91,12 @@ class UIWindow(QMainWindow):
         self.dcValue.setMinimum(self.minDC)
         self.periodValue.setValue(self.minPeriod)
         self.dcValue.setValue(self.minDC)
-
+        self.param2Value.setMinimum(self.minFreq)
+        self.param2Value.setValue(self.minFreq)
+        self.param1Value.setMinimum(self.minTension)
+        self.param1Value.setValue(self.minTension)
+        self.param3Value.setMinimum(self.minPhase)
+        self.param3Value.setValue(self.minPhase)
         self.periodUnit.clear()
 
         for unit in self.periodMultipliers:
@@ -220,7 +225,6 @@ class UIWindow(QMainWindow):
                     phase) + phase_mult_text + ")")
 
         elif self.expRadio.isChecked():
-            signal_type = SignalTypes.EXPONENTIAL
             vmax_v = self.param1Value.value()
             vmax_unit_text = self.param1Unit.currentText()
             vmax_unit_value = self.tensionMultipliers[vmax_unit_text]
@@ -232,13 +236,15 @@ class UIWindow(QMainWindow):
 
             self.xinSignal.add_description(
                 "Input: " + str(vmax_v) + vmax_unit_text + "*e^(-|t|), período: " + str(period_value) + period_mult_text)
-        self.auxSignal = self.xinSignal
+        self.auxSignal = Signal(None)
+        self.auxSignal.copy_signal(self.xinSignal)
 
     def xin_plot_clicked(self):
         self.oscilloscope.add_signal_to_oscilloscope(self.xinSignal)
 
     def anti_alias_plot_clicked(self):
-        self.auxSignal = self.xinSignal
+        self.auxSignal = Signal(None)
+        self.auxSignal.copy_signal(self.xinSignal)
 
         self.antiAlias.apply_to_signal(self.auxSignal)
 
@@ -249,7 +255,8 @@ class UIWindow(QMainWindow):
         self.oscilloscope.add_signal_to_oscilloscope(self.auxSignal)
 
     def sample_hold_plot_clicked(self):
-        self.auxSignal = self.xinSignal
+        self.auxSignal = Signal(None)
+        self.auxSignal.copy_signal(self.xinSignal)
         self.antiAlias.apply_to_signal(self.auxSignal)
         self.sampleAndHold.apply_to_signal(self.auxSignal)
 
@@ -260,7 +267,8 @@ class UIWindow(QMainWindow):
         self.oscilloscope.add_signal_to_oscilloscope(self.auxSignal)
 
     def analog_plot_clicked(self):
-        self.auxSignal = self.xinSignal
+        self.auxSignal = Signal(None)
+        self.auxSignal.copy_signal(self.xinSignal)
 
         self.antiAlias.apply_to_signal(self.auxSignal)
         self.sampleAndHold.apply_to_signal(self.auxSignal)
@@ -275,7 +283,8 @@ class UIWindow(QMainWindow):
 
     def xout_plot_clicked(self):
 
-        self.auxSignal = self.xinSignal
+        self.auxSignal = Signal(None)
+        self.auxSignal.copy_signal(self.xinSignal)
 
         self.antiAlias.apply_to_signal(self.auxSignal)
         self.sampleAndHold.apply_to_signal(self.auxSignal)
@@ -295,15 +304,15 @@ class UIWindow(QMainWindow):
 
     def sample_hold_check_clicked(self):
         if self.sampleholdCheck.isChecked():
-            self.sampleHold.deactivate_block(False)
+            self.sampleAndHold.deactivate_block(False)
         else:
-            self.sampleHold.deactivate_block(True)
+            self.sampleAndHold.deactivate_block(True)
 
     def analog_check_clicked(self):
         if self.analogCheck.isChecked():
-            self.analog.deactivate_block(False)
+            self.analogSwitch.deactivate_block(False)
         else:
-            self.analog.deactivate_block(True)
+            self.analogSwitch.deactivate_block(True)
 
     def recup_check_clicked(self):
         if self.recupCheck.isChecked():
