@@ -47,7 +47,7 @@ class UIWindow(QMainWindow):
 
         self.__window_qt_configuration__()
 
-        self.timeArray = np.arange(-10, 10, 0.0001)
+        self.timeArray = np.arange(0, 15, 0.0001)
         self.xinSignal = Signal(self.timeArray)
         self.auxSignal = self.xinSignal
         self.samplingSignal = Signal(self.timeArray)
@@ -195,7 +195,7 @@ class UIWindow(QMainWindow):
                                      duty_cycle=self.dcValue.value())
 
     def refresh_xin_clicked(self):
-        self.xinSignal = None
+        #self.xinSignal = None
         if self.pulseRadio.isChecked():
 
             self.xinSignal.create_dirac_signal()
@@ -243,7 +243,7 @@ class UIWindow(QMainWindow):
 
         aux_signal_description = self.auxSignal.description
         aux_signal_description = "AntiAlias OUT. " + aux_signal_description
-        self.auxSignal.set_description(aux_signal_description)
+        self.auxSignal.add_description(aux_signal_description)
 
         self.oscilloscope.add_signal_to_oscilloscope(self.auxSignal)
 
@@ -254,7 +254,7 @@ class UIWindow(QMainWindow):
 
         aux_signal_description = self.auxSignal.description
         aux_signal_description = "Sample & Hold OUT. " + aux_signal_description
-        self.auxSignal.set_description(aux_signal_description)
+        self.auxSignal.add_description(aux_signal_description)
 
         self.oscilloscope.add_signal_to_oscilloscope(self.auxSignal)
 
@@ -268,7 +268,7 @@ class UIWindow(QMainWindow):
 
         aux_signal_description = self.auxSignal.description
         aux_signal_description = "Analog Switch OUT. " + aux_signal_description
-        self.auxSignal.set_description(aux_signal_description)
+        self.auxSignal.add_description(aux_signal_description)
 
         self.oscilloscope.add_signal_to_oscilloscope(self.auxSignal)
 
@@ -283,7 +283,7 @@ class UIWindow(QMainWindow):
 
         aux_signal_description = self.auxSignal.description
         aux_signal_description = "Xout Signal. " + aux_signal_description
-        self.auxSignal.set_description(aux_signal_description)
+        self.auxSignal.add_description(aux_signal_description)
         self.oscilloscope.add_signal_to_oscilloscope(self.auxSignal)
 
     def anti_alias_check_clicked(self):
@@ -294,15 +294,15 @@ class UIWindow(QMainWindow):
 
     def sample_hold_check_clicked(self):
         if self.sampleholdCheck.isChecked():
-            self.sampleHold.deactivate_block(False)
+            self.sampleAndHold.deactivate_block(False)
         else:
-            self.sampleHold.deactivate_block(True)
+            self.sampleAndHold.deactivate_block(True)
 
     def analog_check_clicked(self):
         if self.analogCheck.isChecked():
-            self.analog.deactivate_block(False)
+            self.analogSwitch.deactivate_block(False)
         else:
-            self.analog.deactivate_block(True)
+            self.analogSwitch.deactivate_block(True)
 
     def recup_check_clicked(self):
         if self.recupCheck.isChecked():

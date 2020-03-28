@@ -23,9 +23,9 @@ class Signal:
 
     def set_step_plot(self, step_plot=True):
         if step_plot:
-            self.plotType = PlotingTypes.STEP
+            self.plotType = PlotingType.STEP
         else:
-            self.plotType = PlotingTypes.NORMAL
+            self.plotType = PlotingType.NORMAL
 
     # todo
     def get_frequency_spectrum(self):
@@ -39,13 +39,11 @@ class Signal:
         self.yArray = y_values
 
     def create_cos_signal(self, hz_frequency, amplitude, phase=0):
-        self.timeValues = self.timeArray
         self.yValues = amplitude * np.cos(self.timeArray * 2 * np.pi * hz_frequency + phase)
         self.signalType = SignalTypes.SINUSOIDAL
 
     def create_exp_signal(self, v_max, period):
-        self.timeValues = self.timeArray
-        self.yValues = self.evaluate_periodic_exp(self.timeValues, period, v_max)
+        self.yValues = self.evaluate_periodic_exp(self.timeArray, period, v_max)
         self.signalType = SignalTypes.EXPONENTIAL
 
     def evaluate_periodic_exp(self, time_array: list, period, V_MAX):
@@ -69,7 +67,7 @@ class Signal:
 
         while not found and i<len(self.timeArray):
             if abs(self.timeArray[i]) <= 0.00001:
-                Found = True
+                found = True
                 zeroIndex = i
             i+=1
         self.yValues = scipySignal.unit_impulse(len(self.timeArray), zeroIndex)
@@ -79,7 +77,7 @@ class Signal:
 
 	#periodo en s y dutycicle de 0 a 1
     def create_square_signal(self, dutyCicle, period):
-        yValue = scipySignal.square(2 * np.pi * self.timeArray * 1/period, dutyCicle)
+        self.yValue = scipySignal.square(2 * np.pi * self.timeArray * 1/period, dutyCicle)
 
     def add_description(self, description):
         self.description  = description
