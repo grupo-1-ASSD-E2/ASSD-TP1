@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color:rgb(160, 210, 220);</string>
+   <string notr="true">background-color:rgb(50, 75, 77);</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout" stretch="50,50">
@@ -22,6 +22,9 @@
      <layout class="QHBoxLayout" name="horizontalLayout" stretch="50,50">
       <item>
        <widget class="QGroupBox" name="groupBox_2">
+        <property name="styleSheet">
+         <string notr="true">color: rgb(255, 255, 255);</string>
+        </property>
         <property name="title">
          <string>Xin</string>
         </property>
@@ -36,6 +39,9 @@
                 <font>
                  <italic>true</italic>
                 </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color: rgb(255, 255, 255);</string>
                </property>
                <property name="text">
                 <string>Sinusoidal</string>
@@ -56,6 +62,9 @@
                  <italic>true</italic>
                 </font>
                </property>
+               <property name="styleSheet">
+                <string notr="true">color: rgb(255, 255, 255);</string>
+               </property>
                <property name="text">
                 <string>Exponencial</string>
                </property>
@@ -71,6 +80,9 @@
                 <font>
                  <italic>true</italic>
                 </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color: rgb(255, 255, 255);</string>
                </property>
                <property name="text">
                 <string>Impulso</string>
@@ -209,7 +221,22 @@
             </layout>
            </item>
            <item>
-            <layout class="QVBoxLayout" name="verticalLayout_6" stretch="80,20">
+            <layout class="QVBoxLayout" name="verticalLayout_6" stretch="0,80,20">
+             <item alignment="Qt::AlignHCenter">
+              <widget class="QLabel" name="errorLabel">
+               <property name="font">
+                <font>
+                 <family>Microsoft YaHei</family>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">color:rgb(255, 0, 0)</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
              <item>
               <spacer name="verticalSpacer">
                <property name="orientation">
@@ -248,12 +275,18 @@
                 <widget class="QPushButton" name="refreshXinButton">
                  <property name="font">
                   <font>
-                   <weight>75</weight>
-                   <bold>true</bold>
+                   <pointsize>-1</pointsize>
                   </font>
                  </property>
+                 <property name="styleSheet">
+                  <string notr="true">background: rgb(70,90,100);
+color:rgb(255,255,255);
+border-radius: 5px;
+font-size: 20px
+</string>
+                 </property>
                  <property name="text">
-                  <string>Actualizar Xin</string>
+                  <string>  Actualizar Xin  </string>
                  </property>
                 </widget>
                </item>
@@ -273,6 +306,9 @@
           <horstretch>20</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: rgb(255, 255, 255);</string>
         </property>
         <property name="title">
          <string>Señal de control de muestro</string>
@@ -549,12 +585,18 @@
               <widget class="QPushButton" name="refreshSampleButton">
                <property name="font">
                 <font>
-                 <weight>75</weight>
-                 <bold>true</bold>
+                 <pointsize>-1</pointsize>
                 </font>
                </property>
+               <property name="styleSheet">
+                <string notr="true">background: rgb(70,90,100);
+color:rgb(255,255,255);
+border-radius: 5px;
+font-size: 20px
+</string>
+               </property>
                <property name="text">
-                <string>Actualizar Xsamp</string>
+                <string>  Actualizar Xsamp  </string>
                </property>
               </widget>
              </item>
@@ -570,14 +612,37 @@
     <item>
      <layout class="QVBoxLayout" name="verticalLayout_10" stretch="40">
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="5,20,5,15,5,15,5,15,10">
+       <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,5,20,5,15,5,15,5,15,10,0">
         <property name="spacing">
          <number>3</number>
         </property>
         <item>
+         <spacer name="horizontalSpacer_10">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Minimum</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>10</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
          <widget class="QPushButton" name="xinPlotButton">
+          <property name="styleSheet">
+           <string notr="true">background: rgb(70,90,100);
+color:rgb(255,255,255);
+border-radius: 5px;
+font-size: 20px
+</string>
+          </property>
           <property name="text">
-           <string>Xin ----&gt;</string>
+           <string> Xin ----&gt;  </string>
           </property>
          </widget>
         </item>
@@ -602,6 +667,9 @@
              <font>
               <italic>false</italic>
              </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: rgb(255, 255, 255);</string>
             </property>
             <property name="text">
              <string>Filtro Anti-Alias</string>
@@ -641,8 +709,15 @@
         </item>
         <item>
          <widget class="QPushButton" name="antiAliasPlotButton">
+          <property name="styleSheet">
+           <string notr="true">background: rgb(70,90,100);
+color:rgb(255,255,255);
+border-radius: 5px;
+font-size: 20px
+</string>
+          </property>
           <property name="text">
-           <string>----&gt;</string>
+           <string>  ----&gt; </string>
           </property>
          </widget>
         </item>
@@ -663,6 +738,9 @@
           </item>
           <item>
            <widget class="QLabel" name="label">
+            <property name="styleSheet">
+             <string notr="true">color: rgb(255, 255, 255);</string>
+            </property>
             <property name="text">
              <string>Sample &amp; Hold</string>
             </property>
@@ -701,8 +779,15 @@
         </item>
         <item>
          <widget class="QPushButton" name="sampleHoldPlotButton">
+          <property name="styleSheet">
+           <string notr="true">background: rgb(70,90,100);
+color:rgb(255,255,255);
+border-radius: 5px;
+font-size: 20px
+</string>
+          </property>
           <property name="text">
-           <string>----&gt;</string>
+           <string>  ----&gt; </string>
           </property>
          </widget>
         </item>
@@ -723,6 +808,9 @@
           </item>
           <item>
            <widget class="QLabel" name="label_2">
+            <property name="styleSheet">
+             <string notr="true">color: rgb(255, 255, 255);</string>
+            </property>
             <property name="text">
              <string>Llave Analógica</string>
             </property>
@@ -761,8 +849,15 @@
         </item>
         <item>
          <widget class="QPushButton" name="analogPlotButton">
+          <property name="styleSheet">
+           <string notr="true">background: rgb(70,90,100);
+color:rgb(255,255,255);
+border-radius: 5px;
+font-size: 20px
+</string>
+          </property>
           <property name="text">
-           <string>----&gt;</string>
+           <string>  ----&gt; </string>
           </property>
          </widget>
         </item>
@@ -783,6 +878,9 @@
           </item>
           <item>
            <widget class="QLabel" name="label_3">
+            <property name="styleSheet">
+             <string notr="true">color: rgb(255, 255, 255);</string>
+            </property>
             <property name="text">
              <string>Filtro Recuperador</string>
             </property>
@@ -821,10 +919,33 @@
         </item>
         <item>
          <widget class="QPushButton" name="xoutPlotButton">
+          <property name="styleSheet">
+           <string notr="true">background: rgb(70,90,100);
+color:rgb(255,255,255);
+border-radius: 5px;
+font-size: 20px
+</string>
+          </property>
           <property name="text">
-           <string>---&gt; Xout</string>
+           <string>  ---&gt; Xout  </string>
           </property>
          </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_11">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Minimum</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>10</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </item>

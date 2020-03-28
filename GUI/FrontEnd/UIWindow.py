@@ -196,9 +196,9 @@ class UIWindow(QMainWindow):
 
     def refresh_sample_clicked(self):
 
-        self.samplingSignal.create_square_signal(self.dcValue.value(),self.periodValue.value() * self.periodMultipliers[
-            self.periodUnit.currentText()])
-
+        self.samplingSignal.create_square_signal(self.dcValue.value(),
+                                                 self.periodValue.value() * self.periodMultipliers[
+                                                     self.periodUnit.currentText()])
 
     def refresh_xin_clicked(self):
 
@@ -232,69 +232,99 @@ class UIWindow(QMainWindow):
             period_value = self.param2Value.value()
             period_mult_text = self.param2Unit.currentText()
             period_mult_value = self.periodMultipliers[period_mult_text]
-            self.xinSignal.create_exp_signal(vmax_v * vmax_unit_value, period_value*period_mult_value)
+            self.xinSignal.create_exp_signal(vmax_v * vmax_unit_value, period_value * period_mult_value)
 
             self.xinSignal.add_description(
-                "Input: " + str(vmax_v) + vmax_unit_text + "*e^(-|t|), período: " + str(period_value) + period_mult_text)
+                "Input: " + str(vmax_v) + vmax_unit_text + "*e^(-|t|), período: " + str(
+                    period_value) + period_mult_text)
         self.auxSignal = Signal(None)
         self.auxSignal.copy_signal(self.xinSignal)
 
     def xin_plot_clicked(self):
-        self.oscilloscope.add_signal_to_oscilloscope(self.xinSignal)
+        if self.__check_input_exists__():
+            self.oscilloscope.add_signal_to_oscilloscope(self.xinSignal)
 
     def anti_alias_plot_clicked(self):
-        self.auxSignal = Signal(None)
-        self.auxSignal.copy_signal(self.xinSignal)
+        if self.__check_input_exists__():
+            self.auxSignal = Signal(None)
+            self.auxSignal.copy_signal(self.xinSignal)
 
-        self.antiAlias.apply_to_signal(self.auxSignal)
+            self.antiAlias.apply_to_signal(self.auxSignal)
 
-        aux_signal_description = self.auxSignal.description
-        aux_signal_description = "AntiAlias OUT. " + aux_signal_description
-        self.auxSignal.add_description(aux_signal_description)
+            aux_signal_description = self.auxSignal.description
+            aux_signal_description = "AntiAlias OUT. " + aux_signal_description
+            self.auxSignal.add_description(aux_signal_description)
 
-        self.oscilloscope.add_signal_to_oscilloscope(self.auxSignal)
+            self.oscilloscope.add_signal_to_oscilloscope(self.auxSignal)
 
     def sample_hold_plot_clicked(self):
-        self.auxSignal = Signal(None)
-        self.auxSignal.copy_signal(self.xinSignal)
-        self.antiAlias.apply_to_signal(self.auxSignal)
-        self.sampleAndHold.apply_to_signal(self.auxSignal)
+        if self.__check_input_exists__() and self.__check_sample_signal_exists__():
+            self.auxSignal = Signal(None)
+            self.auxSignal.copy_signal(self.xinSignal)
+            self.antiAlias.apply_to_signal(self.auxSignal)
+            self.sampleAndHold.apply_to_signal(self.auxSignal)
 
-        aux_signal_description = self.auxSignal.description
-        aux_signal_description = "Sample & Hold OUT. " + aux_signal_description
-        self.auxSignal.add_description(aux_signal_description)
+            aux_signal_description = self.auxSignal.description
+            aux_signal_description = "Sample & Hold OUT. " + aux_signal_description
+            self.auxSignal.add_description(aux_signal_description)
 
-        self.oscilloscope.add_signal_to_oscilloscope(self.auxSignal)
+            self.oscilloscope.add_signal_to_oscilloscope(self.auxSignal)
+
+    def __check_input_exists__(self):
+        error = True
+        if self.xinSignal is not None and self.xinSignal.timeArray is not None \
+                and self.xinSignal.yValues is not None \
+                and len(self.xinSignal.yValues) > 0:
+            error = False
+            self.errorLabel.setText('')
+        else:
+            self.errorLabel.setText('No input signal')
+
+        return not error
+
+    def __check_sample_signal_exists__(self):
+        error = True
+        if self.samplingSignal is not None and self.samplingSignal.timeArray is not None \
+                and self.samplingSignal.yValues is not None \
+                and len(self.samplingSignal.yValues) > 0:
+            error = False
+        elif not self.sampleAndHold.blockActivated and not self.analogSwitch.blockActivated:  # no necesito sampleo
+            error = False
+        else:
+            self.errorLabel.setText('No sampling signal')
+
+        return not error
 
     def analog_plot_clicked(self):
-        self.auxSignal = Signal(None)
-        self.auxSignal.copy_signal(self.xinSignal)
+        if self.__check_input_exists__() and self.__check_sample_signal_exists__():
+            self.auxSignal = Signal(None)
+            self.auxSignal.copy_signal(self.xinSignal)
 
-        self.antiAlias.apply_to_signal(self.auxSignal)
-        self.sampleAndHold.apply_to_signal(self.auxSignal)
+            self.antiAlias.apply_to_signal(self.auxSignal)
+            self.sampleAndHold.apply_to_signal(self.auxSignal)
 
-        self.analogSwitch.apply_to_signal(self.auxSignal)
+            self.analogSwitch.apply_to_signal(self.auxSignal)
 
-        aux_signal_description = self.auxSignal.description
-        aux_signal_description = "Analog Switch OUT. " + aux_signal_description
-        self.auxSignal.add_description(aux_signal_description)
+            aux_signal_description = self.auxSignal.description
+            aux_signal_description = "Analog Switch OUT. " + aux_signal_description
+            self.auxSignal.add_description(aux_signal_description)
 
-        self.oscilloscope.add_signal_to_oscilloscope(self.auxSignal)
+            self.oscilloscope.add_signal_to_oscilloscope(self.auxSignal)
 
     def xout_plot_clicked(self):
+        if self.__check_input_exists__() and self.__check_sample_signal_exists__():
+            self.auxSignal = Signal(None)
+            self.auxSignal.copy_signal(self.xinSignal)
 
-        self.auxSignal = Signal(None)
-        self.auxSignal.copy_signal(self.xinSignal)
+            self.antiAlias.apply_to_signal(self.auxSignal)
+            self.sampleAndHold.apply_to_signal(self.auxSignal)
+            self.analogSwitch.apply_to_signal(self.auxSignal)
+            self.recovery.apply_to_signal(self.auxSignal)
 
-        self.antiAlias.apply_to_signal(self.auxSignal)
-        self.sampleAndHold.apply_to_signal(self.auxSignal)
-        self.analogSwitch.apply_to_signal(self.auxSignal)
-        self.recovery.apply_to_signal(self.auxSignal)
-
-        aux_signal_description = self.auxSignal.description
-        aux_signal_description = "Xout Signal. " + aux_signal_description
-        self.auxSignal.add_description(aux_signal_description)
-        self.oscilloscope.add_signal_to_oscilloscope(self.auxSignal)
+            aux_signal_description = self.auxSignal.description
+            aux_signal_description = "Xout Signal. " + aux_signal_description
+            self.auxSignal.add_description(aux_signal_description)
+            self.oscilloscope.add_signal_to_oscilloscope(self.auxSignal)
 
     def anti_alias_check_clicked(self):
         if self.antiAliasCheck.isChecked():

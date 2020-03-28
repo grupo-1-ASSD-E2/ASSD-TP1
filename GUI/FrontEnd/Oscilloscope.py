@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUi
-
+import numpy as np
 from BackEnd.Signal import PlotTypes
 
 from GUI.BackEnd.Signal import Signal
@@ -30,7 +30,6 @@ class Oscilloscope(QMainWindow):
         self.plot_current_signals()
 
         self.show()
-
 
     def toggle_signal(self):
         index = self.signalList.currentRow()
@@ -66,23 +65,41 @@ class Oscilloscope(QMainWindow):
 
     def plot_current_signals(self):
         self.oscilloscopeGraph.canvas.axes.clear()
-
+        self.oscilloscopeGraph.figure.tight_layout()
         self.oscilloscopeGraph.canvas.axes.set_xlabel("t [s]")
         self.oscilloscopeGraph.canvas.axes.set_ylabel("A [V]")
         self.oscilloscopeGraph.canvas.axes.axis('auto')
         self.oscilloscopeGraph.canvas.axes.yaxis.label.set_color('white')
         self.oscilloscopeGraph.canvas.axes.xaxis.label.set_color('white')
         self.oscilloscopeGraph.canvas.axes.grid(True, which="both")
-        self.oscilloscopeGraph.figure.tight_layout()
+
+        period_found = False
+        min_period = -1
 
         for signal in self.plot_signals:
             if signal.oscilloscopePlotActivated:
-                if signal.plotType == PlotTypes.STEP:
 
+                if signal.plotType == PlotTypes.STEP:
                     self.oscilloscopeGraph.canvas.axes.step(signal.timeArray, signal.yValues
                                                             , where='post', label=signal.description)
                 else:
                     self.oscilloscopeGraph.canvas.axes.plot(signal.timeArray, signal.yValues, label=signal.description)
-        self.oscilloscopeGraph.canvas.axes.axis('auto')
+
+                if signal.period != -1:
+                    if not period_found:
+                        min_period = signal.period
+                        period_found = True
+                    else:
+                        if signal.period < min_period:
+                            min_period = signal.period
+
+        if period_found:
+            self.oscilloscopeGraph.canvas.axes.set(xlim=(0, 3* min_period))
+            self.oscilloscopeGraph.canvas.axes.set_ylim(auto=True)
+        else:
+            self.oscilloscopeGraph.canvas.axes.axis('auto')
+        self.oscilloscopeGraph.canvas.axes.ticklabel_format(useOffset=False)
         self.oscilloscopeGraph.canvas.axes.legend(loc='best')
+        self.oscilloscopeGraph.figure.tight_layout()
+
         self.oscilloscopeGraph.canvas.draw()  # Redraws

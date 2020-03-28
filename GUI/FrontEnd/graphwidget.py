@@ -18,7 +18,7 @@ class GraphWidget(QWidget):
         self.y_label = "Y"
         self.title = " "
         self.figure = Figure()
-        self.figure.patch.set_facecolor((40 / 255, 55 / 255, 57 / 255, 1))
+        self.figure.patch.set_facecolor((53 / 255, 73 / 255, 80 / 255, 1))
         self.canvas = FigureCanvas(self.figure)
 
         self.toolbar = NavigationToolbar(self.canvas, self)  # Toolbar to work on the graphs
@@ -29,7 +29,6 @@ class GraphWidget(QWidget):
 
         self.canvas.axes = self.canvas.figure.add_subplot(111)
 
-
-        self.canvas.axes.tick_params(direction='out', length=1, width=1, labelsize=8, colors='w')
+        self.canvas.axes.tick_params(direction='out', labelsize=8, colors='w')
         self.setLayout(vertical_layout)
         self.figure.tight_layout()
