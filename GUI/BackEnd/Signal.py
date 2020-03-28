@@ -15,6 +15,15 @@ class Signal:
         self.oscilloscopePlotActivated = True  # Permite togglear una senal en el osciloscopio
         self.spectrumAnalyzerPlotActivated = True  # Permite togglear una senal en el analizador de espectro
 
+    def copy_signal(self, signal):
+        self.yValues = signal.yValues
+        self.signalType = signal.signalType
+        self.description = signal.description
+        self.timeArray = signal.timeArray
+        self.plotType = signal.plotType
+        self.oscilloscopePlotActivated = signal.oscilloscopePlotActivated
+        self.spectrumAnalyzerPlotActivated = signal.spectrumAnalyzerPlotActivated
+
     def toggle_oscilloscope_plot(self):
         self.oscilloscopePlotActivated = not self.oscilloscopePlotActivated
 
@@ -23,9 +32,9 @@ class Signal:
 
     def set_step_plot(self, step_plot=True):
         if step_plot:
-            self.plotType = PlotingTypes.STEP
+            self.plotType = PlotTypes.STEP
         else:
-            self.plotType = PlotingTypes.NORMAL
+            self.plotType = PlotTypes.NORMAL
 
     # todo
     def get_frequency_spectrum(self):
@@ -39,13 +48,13 @@ class Signal:
         self.yArray = y_values
 
     def create_cos_signal(self, hz_frequency, amplitude, phase=0):
-        self.timeValues = self.timeArray
+
         self.yValues = amplitude * np.cos(self.timeArray * 2 * np.pi * hz_frequency + phase)
         self.signalType = SignalTypes.SINUSOIDAL
 
     def create_exp_signal(self, v_max, period):
-        self.timeValues = self.timeArray
-        self.yValues = self.evaluate_periodic_exp(self.timeValues, period, v_max)
+
+        self.yValues = self.evaluate_periodic_exp(self.timeArray, period, v_max)
         self.signalType = SignalTypes.EXPONENTIAL
 
     def evaluate_periodic_exp(self, time_array: list, period, V_MAX):
@@ -67,22 +76,19 @@ class Signal:
         zeroIndex = -1
         found = False
 
-        while not found and i<len(self.timeArray):
+        while not found and i < len(self.timeArray):
             if abs(self.timeArray[i]) <= 0.00001:
                 Found = True
                 zeroIndex = i
-            i+=1
+            i += 1
         self.yValues = scipySignal.unit_impulse(len(self.timeArray), zeroIndex)
-    
 
-        
-
-	#periodo en s y dutycicle de 0 a 1
+    # periodo en s y dutycicle de 0 a 1
     def create_square_signal(self, dutyCicle, period):
-        yValue = scipySignal.square(2 * np.pi * self.timeArray * 1/period, dutyCicle)
+        yValue = scipySignal.square(2 * np.pi * self.timeArray * 1 / period, dutyCicle)
 
     def add_description(self, description):
-        self.description  = description
+        self.description = description
 
 
 class SignalTypes(Enum):

@@ -4,6 +4,8 @@ import numpy as np
 
 from BackEnd.Signal import PlotTypes
 
+from GUI.BackEnd.Signal import Signal
+
 
 class Oscilloscope(QMainWindow):
 
@@ -21,7 +23,7 @@ class Oscilloscope(QMainWindow):
 
     def __show_oscilloscope__(self):
 
-        loadUi('GUI/FrontEnd/oscilloscope.ui', self)
+        loadUi('FrontEnd/oscilloscope.ui', self)
         self.setWindowTitle("Osciloscopio")
         self.removeSignal.clicked.connect(self.remove_signal_from_oscilloscope)
         self.removeAllSignals.clicked.connect(self.remove_all_signals_from_oscilloscope)
@@ -31,16 +33,21 @@ class Oscilloscope(QMainWindow):
         self.show()
 
 
-    def toggle_signal(self, index):
-        if self.plot_signals[index] is not None:
-            self.plot_signals[index].toggle_oscilloscope_plot()
+    def toggle_signal(self):
+        index = self.signalList.currentRow()
+        if index != -1:
+            if self.plot_signals[index] is not None:
+                self.plot_signals[index].toggle_oscilloscope_plot()
+        self.plot_current_signals()
 
     def add_signal_to_oscilloscope(self, signal):
         if self.hidden:
             self.hidden = False
             self.__show_oscilloscope__()
-        self.plot_signals.append(signal)
-        list_widget_item = QListWidgetItem(signal.description)
+        new_signal = Signal(signal.timeArray)
+        new_signal.copy_signal(signal)
+        self.plot_signals.append(new_signal)
+        list_widget_item = QListWidgetItem(new_signal.description)
         self.signalList.addItem(list_widget_item)
         self.plot_current_signals()
 
@@ -51,10 +58,12 @@ class Oscilloscope(QMainWindow):
             item = None
             if self.plot_signals[index] is not None:
                 self.plot_signals.pop(index)
+        self.plot_current_signals()
 
     def remove_all_signals_from_oscilloscope(self):
         self.plot_signals.clear()
         self.signalList.clear()
+        self.plot_current_signals()
 
     def plot_current_signals(self):
         self.oscilloscopeGraph.canvas.axes.clear()
@@ -68,11 +77,13 @@ class Oscilloscope(QMainWindow):
         self.oscilloscopeGraph.figure.tight_layout()
 
         for signal in self.plot_signals:
-            if signal.plotType == PlotTypes.STEP:
-                self.oscilloscopeGraph.canvas.axes.step(signal.timeValues, signal.yValues
-                                                        , where='post', label=signal.description)
-            else:
-                self.oscilloscopeGraph.canvas.axes.plot(signal.timeValues, signal.yValues, label=signal.description)
+            if signal.oscilloscopePlotActivated:
+                if signal.plotType == PlotTypes.STEP:
+
+                    self.oscilloscopeGraph.canvas.axes.step(signal.timeArray, signal.yValues
+                                                            , where='post', label=signal.description)
+                else:
+                    self.oscilloscopeGraph.canvas.axes.plot(signal.timeArray, signal.yValues, label=signal.description)
         self.oscilloscopeGraph.canvas.axes.axis('auto')
         self.oscilloscopeGraph.canvas.axes.legend(loc='best')
         self.oscilloscopeGraph.canvas.draw()  # Redraws

@@ -31,6 +31,7 @@ class SpectrumAnalyzer(QMainWindow):
     def toggle_signal(self, index):
         if self.plot_signals[index] is not None:
             self.plot_signals[index].toggle_spectrum_analyzer_plot()
+        self.plot_current_signals()
 
     def add_signal_to_spectrum_analyzer(self, signal):
         self.plot_signals.append(signal)
@@ -49,10 +50,12 @@ class SpectrumAnalyzer(QMainWindow):
             item = None
             if self.plot_signals[index] is not None:
                 self.plot_signals.pop(index)
+        self.plot_current_signals()
 
     def remove_all_signals_from_spectrum_analyzer(self):
         self.plot_signals.clear()
         self.signalList.clear()
+        self.plot_current_signals()
 
     def plot_current_signals(self):
         self.spectrumGraph.canvas.axes.clear()
@@ -65,8 +68,9 @@ class SpectrumAnalyzer(QMainWindow):
         self.spectrumGraph.canvas.axes.grid(True, which="both")
         self.spectrumGraph.figure.tight_layout()
         for signal in self.plot_signals:
-            freq_values, y_values = signal.get_frequency_spectrum()
-            self.spectrumGraph.canvas.axes.plot(freq_values, y_values, label=signal.description)
+            if signal.spectrumAnalyzerPlotActivated:
+                freq_values, y_values = signal.get_frequency_spectrum()
+                self.spectrumGraph.canvas.axes.plot(freq_values, y_values, label=signal.description)
         self.spectrumGraph.canvas.axes.axis('auto')
         self.spectrumGraph.canvas.axes.legend(loc='best')
         self.spectrumGraph.canvas.draw()  #

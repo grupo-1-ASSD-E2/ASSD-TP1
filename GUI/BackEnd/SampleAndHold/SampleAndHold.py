@@ -20,7 +20,7 @@ class SampleAndHold(Filter):
     def apply_to_signal(self, signal_in):
         if self.blockActivated:
 
-            out_x_array = signal_in.timeValues
+            out_x_array = signal_in.timeArray
             out_y_array = signal_in.yValues
 
             sample_time = 0
