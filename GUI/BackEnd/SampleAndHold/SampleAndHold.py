@@ -9,7 +9,7 @@ from BackEnd.Filter import Filter
 class SampleAndHold(Filter):
     def __init__(self):
         self.blockActivated = True
-        self.samplingPeriod = 1
+        self.samplingPeriod = 0.01
 
     def change_sampling_period(self, sampling_period):
         self.samplingPeriod = sampling_period
