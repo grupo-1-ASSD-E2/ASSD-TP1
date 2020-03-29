@@ -37,7 +37,7 @@ class UIWindow(QMainWindow):
         self.spectrumAnalyzer = SpectrumAnalyzer()
         self.oscilloscope = Oscilloscope()
         self.program_state = {}
-        loadUi('GUI/FrontEnd/samplingui.ui', self)
+        loadUi('FrontEnd/samplingui.ui', self)
 
         self.minTension = 1
         self.minFreq = 1
@@ -47,10 +47,10 @@ class UIWindow(QMainWindow):
 
         self.__window_qt_configuration__()
 
-        self.timeArray = np.arange(0, 10, 0.00001)
-        self.xinSignal = Signal(self.timeArray)
-        self.auxSignal = self.xinSignal
-        self.samplingSignal = Signal(self.timeArray)
+        self.timeArray = None
+        self.xinSignal = None
+        self.auxSignal = None
+        self.samplingSignal = None
 
         # inicializo clases
         self.antiAlias = AntiAliasFilter()
@@ -195,23 +195,30 @@ class UIWindow(QMainWindow):
             self.param1Value.setVisible(True)
 
     def refresh_sample_clicked(self):
+        self.errorLabel.setText('')
 
-        self.samplingSignal.create_square_signal(self.dcValue.value(),
-                                                 self.periodValue.value() * self.periodMultipliers[
-                                                     self.periodUnit.currentText()])
-    
-
+        if self.xinSignal is not None:
+            self.samplingSignal = Signal(self.xinSignal.timeArray)
+            self.samplingSignal.create_square_signal(self.dcValue.value(),
+                                                     self.periodValue.value() * self.periodMultipliers[
+                                                         self.periodUnit.currentText()])
+            self.sampleAndHold.control_by_sampling_signal(self.samplingSignal)
+            self.analogSwitch.control_by_sampling_signal(self.samplingSignal)
+        else:
+            self.errorLabel.setText('Primero ingresa una señal de entrada')
 
     def refresh_xin_clicked(self):
-
+        self.errorLabel.setText('')
         if self.pulseRadio.isChecked():
-
+            self.timeArray = np.arange(0, 1, 0.001)
+            self.xinSignal = Signal(self.timeArray)
             self.xinSignal.create_dirac_signal()
             self.xinSignal.add_description("Input: Pulse.")
         elif self.sineRadio.isChecked():
             freq = self.param2Value.value()
             freq_mult_text = self.param2Unit.currentText()
             freq_mult_value = self.frequencyMultipliers[freq_mult_text]
+            total_freq = freq * freq_mult_value
 
             amplitude = self.param1Value.value()
             amplitude_mult_text = self.param1Unit.currentText()
@@ -220,7 +227,11 @@ class UIWindow(QMainWindow):
             phase = self.param3Value.value()
             phase_mult_text = self.param3Unit.currentText()
             phase_mult_value = self.phaseMultipliers[phase_mult_text]
-            self.xinSignal.create_cos_signal(freq * freq_mult_value, amplitude * amplitude_mult_value,
+
+            self.timeArray = np.arange(0, 7 / total_freq, 0.01 * (1 / total_freq))
+            self.xinSignal = Signal(self.timeArray)
+
+            self.xinSignal.create_cos_signal(total_freq, amplitude * amplitude_mult_value,
                                              phase=phase * phase_mult_value)
             self.xinSignal.add_description(
                 "Input: " + str(amplitude) + amplitude_mult_text + "*cos(2π*" + str(freq) + freq_mult_text + " +" + str(
@@ -234,17 +245,25 @@ class UIWindow(QMainWindow):
             period_value = self.param2Value.value()
             period_mult_text = self.param2Unit.currentText()
             period_mult_value = self.periodMultipliers[period_mult_text]
-            self.xinSignal.create_exp_signal(vmax_v * vmax_unit_value, period_value * period_mult_value)
+            total_period = period_value * period_mult_value
+
+            self.timeArray = np.arange(0, 5 * total_period, 0.01 * total_period)
+            self.xinSignal = Signal(self.timeArray)
+
+            self.xinSignal.create_exp_signal(vmax_v * vmax_unit_value, total_period)
 
             self.xinSignal.add_description(
                 "Input: " + str(vmax_v) + vmax_unit_text + "*e^(-|t|), período: " + str(
                     period_value) + period_mult_text)
         self.auxSignal = Signal(None)
         self.auxSignal.copy_signal(self.xinSignal)
+        if self.samplingSignal is not None:
+            self.samplingSignal.change_time_array(self.timeArray)
 
     def xin_plot_clicked(self):
         if self.__check_input_exists__():
             self.oscilloscope.add_signal_to_oscilloscope(self.xinSignal)
+            self.spectrumAnalyzer.add_signal_to_oscilloscope(self.auxSignal)
 
     def anti_alias_plot_clicked(self):
         if self.__check_input_exists__():
@@ -258,6 +277,7 @@ class UIWindow(QMainWindow):
             self.auxSignal.add_description(aux_signal_description)
 
             self.oscilloscope.add_signal_to_oscilloscope(self.auxSignal)
+            self.spectrumAnalyzer.add_signal_to_oscilloscope(self.auxSignal)
 
     def sample_hold_plot_clicked(self):
         if self.__check_input_exists__() and self.__check_sample_signal_exists__():
@@ -271,6 +291,7 @@ class UIWindow(QMainWindow):
             self.auxSignal.add_description(aux_signal_description)
 
             self.oscilloscope.add_signal_to_oscilloscope(self.auxSignal)
+            self.spectrumAnalyzer.add_signal_to_oscilloscope(self.auxSignal)
 
     def __check_input_exists__(self):
         error = True
@@ -290,8 +311,10 @@ class UIWindow(QMainWindow):
                 and self.samplingSignal.yValues is not None \
                 and len(self.samplingSignal.yValues) > 0:
             error = False
+            self.errorLabel.setText('')
         elif not self.sampleAndHold.blockActivated and not self.analogSwitch.blockActivated:  # no necesito sampleo
             error = False
+            self.errorLabel.setText('')
         else:
             self.errorLabel.setText('No sampling signal')
 
@@ -312,6 +335,7 @@ class UIWindow(QMainWindow):
             self.auxSignal.add_description(aux_signal_description)
 
             self.oscilloscope.add_signal_to_oscilloscope(self.auxSignal)
+            self.spectrumAnalyzer.add_signal_to_oscilloscope(self.auxSignal)
 
     def xout_plot_clicked(self):
         if self.__check_input_exists__() and self.__check_sample_signal_exists__():
@@ -327,6 +351,7 @@ class UIWindow(QMainWindow):
             aux_signal_description = "Xout Signal. " + aux_signal_description
             self.auxSignal.add_description(aux_signal_description)
             self.oscilloscope.add_signal_to_oscilloscope(self.auxSignal)
+            self.spectrumAnalyzer.add_signal_to_oscilloscope(self.auxSignal)
 
     def anti_alias_check_clicked(self):
         if self.antiAliasCheck.isChecked():
@@ -351,8 +376,3 @@ class UIWindow(QMainWindow):
             self.recovery.deactivate_block(False)
         else:
             self.recovery.deactivate_block(True)
-
-    def testing_osc(self):
-        self.xinSignal.create_cos_signal(10000, 5)
-        self.xinSignal.add_description("hola")
-        self.oscilloscope.add_signal_to_oscilloscope(self.xinSignal)

@@ -138,7 +138,11 @@
                 </widget>
                </item>
                <item>
-                <widget class="QDoubleSpinBox" name="param1Value"/>
+                <widget class="QDoubleSpinBox" name="param1Value">
+                 <property name="maximum">
+                  <double>500.000000000000000</double>
+                 </property>
+                </widget>
                </item>
                <item>
                 <widget class="QComboBox" name="param1Unit">
@@ -164,7 +168,11 @@
                 </widget>
                </item>
                <item>
-                <widget class="QDoubleSpinBox" name="param2Value"/>
+                <widget class="QDoubleSpinBox" name="param2Value">
+                 <property name="maximum">
+                  <double>999.990000000000009</double>
+                 </property>
+                </widget>
                </item>
                <item>
                 <widget class="QComboBox" name="param2Unit">
@@ -205,7 +213,11 @@
                 </widget>
                </item>
                <item>
-                <widget class="QDoubleSpinBox" name="param3Value"/>
+                <widget class="QDoubleSpinBox" name="param3Value">
+                 <property name="maximum">
+                  <double>360.000000000000000</double>
+                 </property>
+                </widget>
                </item>
                <item>
                 <widget class="QComboBox" name="param3Unit">
@@ -221,7 +233,7 @@
             </layout>
            </item>
            <item>
-            <layout class="QVBoxLayout" name="verticalLayout_6" stretch="0,80,20">
+            <layout class="QVBoxLayout" name="verticalLayout_6" stretch="50,5,45">
              <item alignment="Qt::AlignHCenter">
               <widget class="QLabel" name="errorLabel">
                <property name="font">
@@ -235,6 +247,12 @@
                <property name="text">
                 <string/>
                </property>
+               <property name="scaledContents">
+                <bool>true</bool>
+               </property>
+               <property name="wordWrap">
+                <bool>false</bool>
+               </property>
               </widget>
              </item>
              <item>
@@ -243,12 +261,12 @@
                 <enum>Qt::Vertical</enum>
                </property>
                <property name="sizeType">
-                <enum>QSizePolicy::Expanding</enum>
+                <enum>QSizePolicy::Fixed</enum>
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
                  <width>20</width>
-                 <height>40</height>
+                 <height>10</height>
                 </size>
                </property>
               </spacer>
@@ -281,12 +299,12 @@
                  <property name="styleSheet">
                   <string notr="true">background: rgb(70,90,100);
 color:rgb(255,255,255);
-border-radius: 5px;
-font-size: 20px
+
+font-size: 18px
 </string>
                  </property>
                  <property name="text">
-                  <string>  Actualizar Xin  </string>
+                  <string>Actualizar Xin</string>
                  </property>
                 </widget>
                </item>
@@ -426,7 +444,11 @@ font-size: 20px
             </widget>
            </item>
            <item>
-            <widget class="QDoubleSpinBox" name="periodValue"/>
+            <widget class="QDoubleSpinBox" name="periodValue">
+             <property name="maximum">
+              <double>999.990000000000009</double>
+             </property>
+            </widget>
            </item>
            <item>
             <widget class="QComboBox" name="periodUnit">
@@ -502,7 +524,11 @@ font-size: 20px
             </widget>
            </item>
            <item>
-            <widget class="QDoubleSpinBox" name="dcValue"/>
+            <widget class="QDoubleSpinBox" name="dcValue">
+             <property name="maximum">
+              <double>100.000000000000000</double>
+             </property>
+            </widget>
            </item>
            <item>
             <widget class="QLabel" name="label_8">
@@ -591,12 +617,12 @@ font-size: 20px
                <property name="styleSheet">
                 <string notr="true">background: rgb(70,90,100);
 color:rgb(255,255,255);
-border-radius: 5px;
-font-size: 20px
+
+font-size: 18px
 </string>
                </property>
                <property name="text">
-                <string>  Actualizar Xsamp  </string>
+                <string>Actualizar Xsamp</string>
                </property>
               </widget>
              </item>
@@ -634,15 +660,25 @@ font-size: 20px
         </item>
         <item>
          <widget class="QPushButton" name="xinPlotButton">
+          <property name="autoFillBackground">
+           <bool>false</bool>
+          </property>
           <property name="styleSheet">
            <string notr="true">background: rgb(70,90,100);
 color:rgb(255,255,255);
-border-radius: 5px;
-font-size: 20px
+font-size: 17px;
+border-width: 1px;
+
 </string>
           </property>
           <property name="text">
-           <string> Xin ----&gt;  </string>
+           <string>Xin ----&gt;</string>
+          </property>
+          <property name="checkable">
+           <bool>false</bool>
+          </property>
+          <property name="default">
+           <bool>false</bool>
           </property>
          </widget>
         </item>
@@ -712,12 +748,13 @@ font-size: 20px
           <property name="styleSheet">
            <string notr="true">background: rgb(70,90,100);
 color:rgb(255,255,255);
-border-radius: 5px;
-font-size: 20px
+font-size: 17px;
+border-width: 1px;
+
 </string>
           </property>
           <property name="text">
-           <string>  ----&gt; </string>
+           <string>----&gt;</string>
           </property>
          </widget>
         </item>
@@ -782,12 +819,13 @@ font-size: 20px
           <property name="styleSheet">
            <string notr="true">background: rgb(70,90,100);
 color:rgb(255,255,255);
-border-radius: 5px;
-font-size: 20px
+font-size: 17px;
+border-width: 1px;
+
 </string>
           </property>
           <property name="text">
-           <string>  ----&gt; </string>
+           <string>----&gt;</string>
           </property>
          </widget>
         </item>
@@ -852,12 +890,13 @@ font-size: 20px
           <property name="styleSheet">
            <string notr="true">background: rgb(70,90,100);
 color:rgb(255,255,255);
-border-radius: 5px;
-font-size: 20px
+font-size: 17px;
+border-width: 1px;
+
 </string>
           </property>
           <property name="text">
-           <string>  ----&gt; </string>
+           <string>----&gt;</string>
           </property>
          </widget>
         </item>
@@ -922,12 +961,13 @@ font-size: 20px
           <property name="styleSheet">
            <string notr="true">background: rgb(70,90,100);
 color:rgb(255,255,255);
-border-radius: 5px;
-font-size: 20px
+font-size: 17px;
+border-width: 1px;
+
 </string>
           </property>
           <property name="text">
-           <string>  ---&gt; Xout  </string>
+           <string>---&gt; Xout</string>
           </property>
          </widget>
         </item>

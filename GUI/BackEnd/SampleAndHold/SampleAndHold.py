@@ -5,14 +5,18 @@ import numpy as np
 
 from BackEnd.Filter import Filter
 
+from GUI.BackEnd.Signal import Signal
+
 
 class SampleAndHold(Filter):
     def __init__(self):
         self.blockActivated = True
         self.samplingPeriod = 0.01
+        self.samplingSignal = None
 
-    def change_sampling_period(self, sampling_period):
-        self.samplingPeriod = sampling_period
+    def control_by_sampling_signal(self, sampling_signal):
+        self.samplingSignal = Signal(sampling_signal.timeArray)
+        self.samplingSignal.copy_signal(sampling_signal)
 
     def deactivate_block(self, deactivate):
         self.blockActivated = not deactivate
@@ -23,14 +27,14 @@ class SampleAndHold(Filter):
             out_x_array = signal_in.timeArray.copy()
             out_y_array = signal_in.yValues.copy()
 
-            sample_time = 0
-            for i in range(0, len(out_x_array)):
-                if abs(out_x_array[i] - sample_time) < 0.00001:
-                    out_y_array[i] = signal_in.yValues[i]
-                    sample_time += self.samplingPeriod
+            for it in range(0, len(signal_in.timeArray)):
+                if self.samplingSignal.yValues[it] > 0.5:  # Chequea si la senal de sampleo esta activa
+                    out_y_array[it] = signal_in.yValues[it]
                 else:
-                    if i > 0:
-                        out_y_array[i] = out_y_array[i - 1]
+                    if it > 0 and out_y_array[it - 1] is not None:
+                        out_y_array[it] = out_y_array[it - 1]
+                    else:
+                        out_y_array[it] = 0
 
             signal_in.set_x_y_values(out_x_array, out_y_array)
             signal_in.set_step_plot(True)

@@ -1,11 +1,14 @@
 from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUi
 import numpy as np
+from BackEnd.Signal import PlotTypes
+
+from BackEnd.Signal import Signal
 
 
 class SpectrumAnalyzer(QMainWindow):
 
-    def __init__(self):
+    def __init__(self):  # Conecta los componentes del .ui realizado en QT con el programa en python
         QMainWindow.__init__(self)
         self.program_state = {}
         self.plot_signals = []
@@ -17,9 +20,9 @@ class SpectrumAnalyzer(QMainWindow):
         self.plot_signals.clear()
         event.accept()  # let the window close
 
-    def __show_spectrum_analyzer__(self):
+    def __show_oscilloscope__(self):
 
-        loadUi('GUI/FrontEnd/spectrum_analyzer.ui', self)
+        loadUi('FrontEnd/spectrum_analyzer.ui', self)
         self.setWindowTitle("Analizador de Espectro")
         self.removeSignal.clicked.connect(self.remove_signal_from_spectrum_analyzer)
         self.removeAllSignals.clicked.connect(self.remove_all_signals_from_spectrum_analyzer)
@@ -28,22 +31,25 @@ class SpectrumAnalyzer(QMainWindow):
 
         self.show()
 
-    def toggle_signal(self, index):
-        if self.plot_signals[index] is not None:
-            self.plot_signals[index].toggle_spectrum_analyzer_plot()
+    def toggle_signal(self):
+        index = self.signalList.currentRow()
+        if index != -1:
+            if self.plot_signals[index] is not None:
+                self.plot_signals[index].toggle_oscilloscope_plot()
         self.plot_current_signals()
 
-    def add_signal_to_spectrum_analyzer(self, signal):
-        self.plot_signals.append(signal)
+    def add_signal_to_oscilloscope(self, signal):
         if self.hidden:
             self.hidden = False
-            self.__show_spectrum_analyzer__()
-        self.plot_signals.append(signal)
-        list_widget_item = QListWidgetItem(signal.description)
+            self.__show_oscilloscope__()
+        new_signal = Signal(signal.timeArray)
+        new_signal.copy_signal(signal)
+        self.plot_signals.append(new_signal)
+        list_widget_item = QListWidgetItem(new_signal.description)
         self.signalList.addItem(list_widget_item)
         self.plot_current_signals()
 
-    def remove_signal_from_spectrum_analyzer(self, index):
+    def remove_signal_from_spectrum_analyzer(self):
         index = self.signalList.currentRow()
         if index != -1:
             item = self.signalList.takeItem(index)
@@ -59,6 +65,7 @@ class SpectrumAnalyzer(QMainWindow):
 
     def plot_current_signals(self):
         self.spectrumGraph.canvas.axes.clear()
+        self.spectrumGraph.figure.tight_layout()
         self.spectrumGraph.canvas.axes.set_xscale('log')
         self.spectrumGraph.canvas.axes.set_xlabel("f [Hz]")
         self.spectrumGraph.canvas.axes.set_ylabel("P [W]")
@@ -66,11 +73,18 @@ class SpectrumAnalyzer(QMainWindow):
         self.spectrumGraph.canvas.axes.yaxis.label.set_color('white')
         self.spectrumGraph.canvas.axes.xaxis.label.set_color('white')
         self.spectrumGraph.canvas.axes.grid(True, which="both")
-        self.spectrumGraph.figure.tight_layout()
+
+        period_found = False
+        min_period = -1
+
         for signal in self.plot_signals:
             if signal.spectrumAnalyzerPlotActivated:
-                freq_values, y_values = signal.get_frequency_spectrum()
-                self.spectrumGraph.canvas.axes.plot(freq_values, y_values, label=signal.description)
-        self.spectrumGraph.canvas.axes.axis('auto')
+                '''freq_values, y_values = signal.get_frequency_spectrum()
+                                self.spectrumGraph.canvas.axes.plot(freq_values, y_values, label=signal.description)'''
+
+                self.spectrumGraph.canvas.axes.plot(signal.timeArray, signal.yValues, label=signal.description)
+
         self.spectrumGraph.canvas.axes.legend(loc='best')
-        self.spectrumGraph.canvas.draw()  #
+        self.spectrumGraph.figure.tight_layout()
+
+        self.spectrumGraph.canvas.draw()  # Redraws

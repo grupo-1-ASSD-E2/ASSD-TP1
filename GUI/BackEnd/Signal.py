@@ -75,21 +75,16 @@ class Signal:
         return res
 
     def create_dirac_signal(self):
-        i = 0
-        zeroIndex = -1
-        found = False
-
-        while not found and i < len(self.timeArray):
-            if abs(self.timeArray[i]) <= 0.00001:
-                found = True
-                zeroIndex = i
-            i += 1
-        self.yValues = scipySignal.unit_impulse(len(self.timeArray), zeroIndex)
+        self.yValues = scipySignal.unit_impulse(len(self.timeArray), 0)
 
     # periodo en s y dutycicle de 0 a 1
-    def create_square_signal(self, dutyCicle, period):
-        self.yValue = scipySignal.square(2 * np.pi * self.timeArray * 1 / period, dutyCicle)
+    def create_square_signal(self, duty_cycle, period):
+        self.yValues = (0.5 * scipySignal.square(2 * np.pi * self.timeArray * 1 / period, duty_cycle/100) + 0.5) #Los 0.5 hacen que quede entre 0 y 1
         self.period = period
+
+    def change_time_array(self, time_array):
+        self.timeArray = time_array.copy()
+
 
     def add_description(self, description):
         self.description = description
