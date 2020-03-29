@@ -22,7 +22,7 @@ class SpectrumAnalyzer(QMainWindow):
 
     def __show_oscilloscope__(self):
 
-        loadUi('FrontEnd/spectrum_analyzer.ui', self)
+        loadUi('../GUI/FrontEnd/spectrum_analyzer.ui', self)
         self.setWindowTitle("Analizador de Espectro")
         self.removeSignal.clicked.connect(self.remove_signal_from_spectrum_analyzer)
         self.removeAllSignals.clicked.connect(self.remove_all_signals_from_spectrum_analyzer)
