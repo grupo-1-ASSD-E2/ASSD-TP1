@@ -35,7 +35,7 @@ class SpectrumAnalyzer(QMainWindow):
         index = self.signalList.currentRow()
         if index != -1:
             if self.plot_signals[index] is not None:
-                self.plot_signals[index].toggle_oscilloscope_plot()
+                self.plot_signals[index].toggle_spectrum_analyzer_plot()
         self.plot_current_signals()
 
     def add_signal_to_oscilloscope(self, signal):
@@ -66,23 +66,21 @@ class SpectrumAnalyzer(QMainWindow):
     def plot_current_signals(self):
         self.spectrumGraph.canvas.axes.clear()
         self.spectrumGraph.figure.tight_layout()
-        self.spectrumGraph.canvas.axes.set_xscale('log')
+        self.spectrumGraph.canvas.axes.set_xscale('linear')
         self.spectrumGraph.canvas.axes.set_xlabel("f [Hz]")
-        self.spectrumGraph.canvas.axes.set_ylabel("P [W]")
+        self.spectrumGraph.canvas.axes.set_ylabel("A [V]")
         self.spectrumGraph.canvas.axes.axis('auto')
         self.spectrumGraph.canvas.axes.yaxis.label.set_color('white')
         self.spectrumGraph.canvas.axes.xaxis.label.set_color('white')
         self.spectrumGraph.canvas.axes.grid(True, which="both")
 
-        period_found = False
-        min_period = -1
-
         for signal in self.plot_signals:
             if signal.spectrumAnalyzerPlotActivated:
-                '''freq_values, y_values = signal.get_frequency_spectrum()
-                                self.spectrumGraph.canvas.axes.plot(freq_values, y_values, label=signal.description)'''
-
-                self.spectrumGraph.canvas.axes.plot(signal.timeArray, signal.yValues, label=signal.description)
+                freq_values, y_values = signal.get_frequency_spectrum()
+                self.spectrumGraph.canvas.axes.bar(freq_values, (np.abs(y_values) * 1 / signal.yValues.size),
+                                                   label=signal.description,
+                                                   width = 30)
+                self.spectrumGraph.canvas.axes.set_xlim(left = -5000, right=5000)
 
         self.spectrumGraph.canvas.axes.legend(loc='best')
         self.spectrumGraph.figure.tight_layout()

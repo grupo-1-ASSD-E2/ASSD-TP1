@@ -40,10 +40,12 @@ class Signal:
 
     # todo
     def get_frequency_spectrum(self):
-        frequency_values = []  # Hz
-        y_values = []  # W
+        X_A = np.fft.fft(self.yValues)
+        t_step_A = np.abs(self.timeArray[0] - self.timeArray[1])
+        N_A = self.yValues.size
+        f_A = np.fft.fftfreq(N_A, d=t_step_A)
 
-        return frequency_values, y_values
+        return f_A, X_A
 
     def set_x_y_values(self, x_values, y_values):
         self.timeArray = x_values.copy()
@@ -53,7 +55,7 @@ class Signal:
 
         self.yValues = amplitude * np.cos(self.timeArray * 2 * np.pi * hz_frequency + phase)
         self.signalType = SignalTypes.SINUSOIDAL
-        self.period = 1/hz_frequency
+        self.period = 1 / hz_frequency
 
     def create_exp_signal(self, v_max, period):
         self.yValues = self.evaluate_periodic_exp(self.timeArray, period, v_max)
@@ -79,12 +81,12 @@ class Signal:
 
     # periodo en s y dutycicle de 0 a 1
     def create_square_signal(self, duty_cycle, period):
-        self.yValues = (0.5 * scipySignal.square(2 * np.pi * self.timeArray * 1 / period, duty_cycle/100) + 0.5) #Los 0.5 hacen que quede entre 0 y 1
+        self.yValues = (0.5 * scipySignal.square(2 * np.pi * self.timeArray * 1 / period,
+                                                 duty_cycle / 100) + 0.5)  # Los 0.5 hacen que quede entre 0 y 1
         self.period = period
 
     def change_time_array(self, time_array):
         self.timeArray = time_array.copy()
-
 
     def add_description(self, description):
         self.description = description
