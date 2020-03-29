@@ -63,13 +63,13 @@ class Signal:
     def evaluate_periodic_exp(self, time_array: list, period, V_MAX):
         res = []
         for t in time_array:
-            t_in_oritginal_period = float(Decimal(str(t)) % Decimal(str(period)))
-            if t_in_oritginal_period < 0:
-                t_in_oritginal_period = period - t_in_oritginal_period
-            if t_in_oritginal_period < period / 2:
-                y = V_MAX * np.e ** (-np.abs(t_in_oritginal_period))
+            t_in_original_period = float(Decimal(str(t)) % Decimal(str(period)))
+            if t_in_original_period < 0:
+                t_in_original_period = period - t_in_original_period
+            if t_in_original_period < period / 2:
+                y = V_MAX * np.e ** (-np.abs(t_in_original_period))
             else:
-                y = V_MAX * np.e ** (-np.abs(t_in_oritginal_period - period))
+                y = V_MAX * np.e ** (-np.abs(t_in_original_period - period))
 
             res.append(y)
         return res
