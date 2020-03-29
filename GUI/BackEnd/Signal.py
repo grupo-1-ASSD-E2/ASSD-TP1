@@ -81,14 +81,14 @@ class Signal:
 
         while not found and i < len(self.timeArray):
             if abs(self.timeArray[i]) <= 0.00001:
-                Found = True
+                found = True
                 zeroIndex = i
             i += 1
         self.yValues = scipySignal.unit_impulse(len(self.timeArray), zeroIndex)
 
     # periodo en s y dutycicle de 0 a 1
     def create_square_signal(self, dutyCicle, period):
-        yValue = scipySignal.square(2 * np.pi * self.timeArray * 1 / period, dutyCicle)
+        self.yValue = scipySignal.square(2 * np.pi * self.timeArray * 1 / period, dutyCicle)
         self.period = period
 
     def add_description(self, description):

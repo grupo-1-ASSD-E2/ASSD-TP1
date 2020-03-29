@@ -199,6 +199,8 @@ class UIWindow(QMainWindow):
         self.samplingSignal.create_square_signal(self.dcValue.value(),
                                                  self.periodValue.value() * self.periodMultipliers[
                                                      self.periodUnit.currentText()])
+    
+
 
     def refresh_xin_clicked(self):
 
