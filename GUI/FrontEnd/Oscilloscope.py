@@ -22,7 +22,7 @@ class Oscilloscope(QMainWindow):
 
     def __show_oscilloscope__(self):
 
-        loadUi('../GUI/FrontEnd/oscilloscope.ui', self)
+        loadUi('GUI/FrontEnd/oscilloscope.ui', self)
         self.setWindowTitle("Osciloscopio")
         self.removeSignal.clicked.connect(self.remove_signal_from_oscilloscope)
         self.removeAllSignals.clicked.connect(self.remove_all_signals_from_oscilloscope)
@@ -65,7 +65,6 @@ class Oscilloscope(QMainWindow):
 
     def plot_current_signals(self):
         self.oscilloscopeGraph.canvas.axes.clear()
-        self.oscilloscopeGraph.figure.tight_layout()
         self.oscilloscopeGraph.canvas.axes.set_xlabel("t [s]")
         self.oscilloscopeGraph.canvas.axes.set_ylabel("A [V]")
         self.oscilloscopeGraph.canvas.axes.axis('auto')

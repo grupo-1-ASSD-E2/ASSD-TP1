@@ -39,7 +39,6 @@ class Signal:
         else:
             self.plotType = PlotTypes.NORMAL
 
-    # todo
     def get_frequency_spectrum(self):
         X_A = np.fft.fft(self.yValues)
         t_step_A = np.abs(self.timeArray[0] - self.timeArray[1])

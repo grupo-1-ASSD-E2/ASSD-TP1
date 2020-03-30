@@ -18,18 +18,27 @@ class RecoveryFilter(Filter):
 
         # {‘lowpass’, ‘highpass’, ‘bandpass’, ‘bandstop’}, optional
         self.filterType = 'lowpass'
-        self.filter_order = 7
-        self.minAttStopBand_dB = 41
-        self.freqAtFirstMinAttWn = 2 * np.pi * 1800
+        self.filter_order1 = 7
+        self.minAttStopBand_dB1 = 41
+        self.freqAtFirstMinAttWn1 = 2 * np.pi * 1800
+        self.filter_order2 = 7
+        self.minAttStopBand_dB2 = 41
+        self.freqAtFirstMinAttWn2 = 2 * np.pi * 1800
+        self.filter_order3 = 7
+        self.minAttStopBand_dB3 = 41
+        self.freqAtFirstMinAttWn3 = 2 * np.pi * 1800
         self.analogFilter = True
 
         # Numerator (b) and denominator (a) polynomials of the IIR filter
-        self.b, self.a = signal.cheby2(self.filter_order, self.minAttStopBand_dB, self.freqAtFirstMinAttWn,
+        self.b1, self.a1 = signal.cheby2(self.filter_order1, self.minAttStopBand_dB1, self.freqAtFirstMinAttWn1,
                                        self.filterType,
                                        analog=self.analogFilter)
-        # angularFreq : The angular frequencies at which h was computed.
-        # freqResponse : The frequency response.
-        self.angularFreq, self.freqResponse = signal.freqs(self.b, self.a)
+        self.b2, self.a2 = signal.cheby2(self.filter_order2, self.minAttStopBand_dB2, self.freqAtFirstMinAttWn2,
+                                       self.filterType,
+                                       analog=self.analogFilter)
+        self.b3, self.a3 = signal.cheby2(self.filter_order3, self.minAttStopBand_dB3, self.freqAtFirstMinAttWn3,
+                                       self.filterType,
+                                       analog=self.analogFilter)
 
 
 
@@ -38,9 +47,14 @@ class RecoveryFilter(Filter):
 
     def apply_to_signal(self, signal_in):
         if self.blockActivated:
-            tout, y, ni = signal.lsim((self.b, self.a), signal_in.yValues, signal_in.timeArray)
-            signal_in.set_x_y_values(tout, y)
-       
+            if 1/signal_in.period <= 2000 :
+                tout, y, ni = signal.lsim((self.b1, self.a1), signal_in.yValues, signal_in.timeArray)
+                signal_in.set_x_y_values(tout, y)
+            elif 1/signal_in.period <= 4000 and 1/signal_in.period >= 2000:
+                tout, y, ni = signal.lsim((self.b2, self.a2), signal_in.yValues, signal_in.timeArray)
+                signal_in.set_x_y_values(tout, y)
+            else:
+                tout, y, ni = signal.lsim((self.b3, self.a3), signal_in.yValues, signal_in.timeArray)
+                signal_in.set_x_y_values(tout, y)
 
-    def get_filter_freq_response(self):
-        return self.angularFreq, self.freqResponse
+

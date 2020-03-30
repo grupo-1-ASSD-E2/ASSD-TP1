@@ -5,7 +5,7 @@ import numpy as np
 
 from BackEnd.Filter import Filter
 
-from GUI.BackEnd.Signal import Signal
+from BackEnd.Signal import Signal
 
 
 class AnalogSwitch(Filter):
