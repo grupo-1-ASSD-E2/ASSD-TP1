@@ -93,7 +93,7 @@ class Oscilloscope(QMainWindow):
                             min_period = signal.period
 
         if period_found:
-            self.oscilloscopeGraph.canvas.axes.set(xlim=(0, 3* min_period))
+            self.oscilloscopeGraph.canvas.axes.set(xlim=(0, 7* min_period))
             self.oscilloscopeGraph.canvas.axes.set_ylim(auto=True)
         else:
             self.oscilloscopeGraph.canvas.axes.axis('auto')

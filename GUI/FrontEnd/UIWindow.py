@@ -228,7 +228,7 @@ class UIWindow(QMainWindow):
             phase_mult_text = self.param3Unit.currentText()
             phase_mult_value = self.phaseMultipliers[phase_mult_text]
 
-            self.timeArray = np.arange(0, 7 / total_freq, 0.01 * (1 / total_freq))
+            self.timeArray = np.arange(0, 7 / total_freq, 0.003 * (1 / total_freq))
             self.xinSignal = Signal(self.timeArray)
 
             self.xinSignal.create_cos_signal(total_freq, amplitude * amplitude_mult_value,
