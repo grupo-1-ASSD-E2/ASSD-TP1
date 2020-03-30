@@ -77,10 +77,16 @@ class SpectrumAnalyzer(QMainWindow):
         for signal in self.plot_signals:
             if signal.spectrumAnalyzerPlotActivated:
                 freq_values, y_values = signal.get_frequency_spectrum()
+
+                #fo = (freq_values[1] - freq_values[0]) / 20
+                #width = 30
+                #if freq_values[0] != 0:
+                #    width = fo * freq_values / freq_values[0]
+
                 self.spectrumGraph.canvas.axes.bar(freq_values, (np.abs(y_values) * 1 / signal.yValues.size),
                                                    label=signal.description,
-                                                   width = 30)
-                self.spectrumGraph.canvas.axes.set_xlim(left = -5000, right=5000)
+                                                   width=30)
+                self.spectrumGraph.canvas.axes.set_xlim( left=-5000, right=5000)
 
         self.spectrumGraph.canvas.axes.legend(loc='best')
         self.spectrumGraph.figure.tight_layout()
