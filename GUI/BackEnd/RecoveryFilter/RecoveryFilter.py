@@ -18,16 +18,17 @@ class RecoveryFilter(Filter):
 
         # {‘lowpass’, ‘highpass’, ‘bandpass’, ‘bandstop’}, optional
         self.filterType = 'lowpass'
-        self.filter_order1 = 7
-        self.minAttStopBand_dB1 = 41
-        self.freqAtFirstMinAttWn1 = 2 * np.pi * 1800
-        self.filter_order2 = 7
-        self.minAttStopBand_dB2 = 41
-        self.freqAtFirstMinAttWn2 = 2 * np.pi * 1800
-        self.filter_order3 = 7
-        self.minAttStopBand_dB3 = 41
-        self.freqAtFirstMinAttWn3 = 2 * np.pi * 1800
+        self.filter_order1 = 8
+        self.minAttStopBand_dB1 = 48
+        self.freqAtFirstMinAttWn1 = 2 * np.pi * 12
+        self.filter_order2 = 8
+        self.minAttStopBand_dB2 = 48
+        self.freqAtFirstMinAttWn2 = 2 * np.pi * 2700
+        self.filter_order3 = 8
+        self.minAttStopBand_dB3 = 48
+        self.freqAtFirstMinAttWn3 = 2 * np.pi * 375000
         self.analogFilter = True
+
 
         # Numerator (b) and denominator (a) polynomials of the IIR filter
         self.b1, self.a1 = signal.cheby2(self.filter_order1, self.minAttStopBand_dB1, self.freqAtFirstMinAttWn1,
@@ -47,14 +48,15 @@ class RecoveryFilter(Filter):
 
     def apply_to_signal(self, signal_in):
         if self.blockActivated:
-            if 1/signal_in.period <= 2000 :
+            if 1/signal_in.period <= 8 :
                 tout, y, ni = signal.lsim((self.b1, self.a1), signal_in.yValues, signal_in.timeArray)
                 signal_in.set_x_y_values(tout, y)
-            elif 1/signal_in.period <= 4000 and 1/signal_in.period >= 2000:
+            elif 1/signal_in.period <= 1800 and 1/signal_in.period > 8:
                 tout, y, ni = signal.lsim((self.b2, self.a2), signal_in.yValues, signal_in.timeArray)
                 signal_in.set_x_y_values(tout, y)
             else:
                 tout, y, ni = signal.lsim((self.b3, self.a3), signal_in.yValues, signal_in.timeArray)
                 signal_in.set_x_y_values(tout, y)
+
 
 

@@ -18,7 +18,7 @@ class UIWindow(QMainWindow):
         self.spectrumAnalyzer = SpectrumAnalyzer()
         self.oscilloscope = Oscilloscope()
         self.program_state = {}
-        loadUi('../GUI/FrontEnd/samplingui.ui', self)
+        loadUi('GUI/FrontEnd/samplingui.ui', self)
 
         self.minTension = 1
         self.minFreq = 1
