@@ -22,7 +22,7 @@ class Oscilloscope(QMainWindow):
 
     def __show_oscilloscope__(self):
 
-        loadUi('GUI/FrontEnd/oscilloscope.ui', self)
+        loadUi('../GUI/FrontEnd/oscilloscope.ui', self)
         self.setWindowTitle("Osciloscopio")
         self.removeSignal.clicked.connect(self.remove_signal_from_oscilloscope)
         self.removeAllSignals.clicked.connect(self.remove_all_signals_from_oscilloscope)

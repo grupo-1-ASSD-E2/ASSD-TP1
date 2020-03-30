@@ -22,7 +22,7 @@ class SpectrumAnalyzer(QMainWindow):
 
     def __show_oscilloscope__(self):
 
-        loadUi('GUI/FrontEnd/spectrum_analyzer.ui', self)
+        loadUi('../GUI/FrontEnd/spectrum_analyzer.ui', self)
         self.setWindowTitle("Analizador de Espectro")
         self.removeSignal.clicked.connect(self.remove_signal_from_spectrum_analyzer)
         self.removeAllSignals.clicked.connect(self.remove_all_signals_from_spectrum_analyzer)
@@ -66,7 +66,7 @@ class SpectrumAnalyzer(QMainWindow):
     def plot_current_signals(self):
         self.spectrumGraph.canvas.axes.clear()
         self.spectrumGraph.figure.tight_layout()
-        self.spectrumGraph.canvas.axes.set_xscale('linear')
+        self.spectrumGraph.canvas.axes.set_xscale('log')
         self.spectrumGraph.canvas.axes.set_xlabel("f [Hz]")
         self.spectrumGraph.canvas.axes.set_ylabel("A [V]")
         self.spectrumGraph.canvas.axes.axis('auto')
@@ -78,15 +78,15 @@ class SpectrumAnalyzer(QMainWindow):
             if signal.spectrumAnalyzerPlotActivated:
                 freq_values, y_values = signal.get_frequency_spectrum()
 
-                #fo = (freq_values[1] - freq_values[0]) / 20
-                #width = 30
-                #if freq_values[0] != 0:
-                #    width = fo * freq_values / freq_values[0]
+                fo = (freq_values[2] - freq_values[1]) / 20
+                width = 30
+                if freq_values[1] != 0:
+                    width = fo * freq_values / freq_values[1]
 
                 self.spectrumGraph.canvas.axes.bar(freq_values, (np.abs(y_values) * 1 / signal.yValues.size),
                                                    label=signal.description,
-                                                   width=30)
-                self.spectrumGraph.canvas.axes.set_xlim( left=-5000, right=5000)
+                                                   width=width)
+                #self.spectrumGraph.canvas.axes.set_xlim( left=-5000, right=5000)
 
         self.spectrumGraph.canvas.axes.legend(loc='best')
         self.spectrumGraph.figure.tight_layout()
