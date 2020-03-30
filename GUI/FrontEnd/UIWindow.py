@@ -10,25 +10,6 @@ from BackEnd.Signal import SignalTypes, Signal
 from FrontEnd.Oscilloscope import Oscilloscope
 from FrontEnd.SpectrumAnalyzer import SpectrumAnalyzer
 
-'''For ploting: def plot_signal(self):
-        if self.blockActivated:
-            plt.plot(self.timeOut, self.signalOut)
-            plt.title('Out')
-            plt.xlabel('Time')
-            plt.ylabel('V')
-            plt.margins(0, 0.1)
-            plt.grid(which='both', axis='both')
-            plt.show()
-        else:
-            plt.plot(self.timeArray, self.cos)
-            plt.title('cos')
-            plt.xlabel('Time')
-            plt.ylabel('V')
-            plt.margins(0, 0.1)
-            plt.grid(which='both', axis='both')
-            plt.show()'''
-
-
 # Clase UIWindow. Maneja lo relacionado con la ventana mostrada al usuario.
 class UIWindow(QMainWindow):
 
