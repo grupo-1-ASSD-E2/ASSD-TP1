@@ -15,6 +15,7 @@ class Signal:
         self.oscilloscopePlotActivated = True  # Permite togglear una senal en el osciloscopio
         self.spectrumAnalyzerPlotActivated = True  # Permite togglear una senal en el analizador de espectro
         self.period = -1
+        self.duty_cycle = 1
 
     def copy_signal(self, signal):
         self.yValues = signal.yValues.copy()
@@ -83,9 +84,13 @@ class Signal:
         self.yValues = (0.5 * scipySignal.square(2 * np.pi * self.timeArray * 1 / period,
                                                  duty_cycle / 100) + 0.5)  # Los 0.5 hacen que quede entre 0 y 1
         self.period = period
+        self.duty_cycle = duty_cycle
+        self.signalType = SignalTypes.SQUARE
 
     def change_time_array(self, time_array):
         self.timeArray = time_array.copy()
+        if self.signalType == SignalTypes.SQUARE:
+            self.create_square_signal(self.duty_cycle, self.period)
 
     def add_description(self, description):
         self.description = description
