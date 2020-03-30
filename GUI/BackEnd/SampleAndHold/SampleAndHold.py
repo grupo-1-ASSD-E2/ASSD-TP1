@@ -5,7 +5,7 @@ import numpy as np
 
 from BackEnd.Filter import Filter
 
-from GUI.BackEnd.Signal import Signal
+from BackEnd.Signal import Signal
 
 
 class SampleAndHold(Filter):
@@ -38,6 +38,3 @@ class SampleAndHold(Filter):
 
             signal_in.set_x_y_values(out_x_array, out_y_array)
             signal_in.set_step_plot(True)
-
-    def get_filter_freq_response(self):
-        return self.angularFreq, self.freqResponse
