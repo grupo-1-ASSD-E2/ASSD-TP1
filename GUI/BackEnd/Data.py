@@ -1,6 +1,6 @@
 from enum import Enum
 
-from GUI.BackEnd.Signal import Signal
+from BackEnd.Signal import Signal
 
 
 class Data:

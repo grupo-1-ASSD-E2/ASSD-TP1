@@ -50,8 +50,6 @@ class Signal:
         N_A = self.yValues.size
         self.f_A = np.fft.fftfreq(N_A, d=t_step_A)
 
-
-
     def set_x_y_values(self, x_values, y_values):
         self.timeArray = x_values.copy()
         self.yValues = y_values.copy()
@@ -60,7 +58,7 @@ class Signal:
 
         self.yValues = amplitude * np.cos(self.timeArray * 2 * np.pi * hz_frequency + phase)
         self.signalType = SignalTypes.SINUSOIDAL
-        self.period = 1 / hz_frequency
+        self.period = 1 / hz_frequency 
 
     def create_exp_signal(self, v_max, period):
         self.yValues = self.evaluate_periodic_exp(self.timeArray, period, v_max)
@@ -79,6 +77,8 @@ class Signal:
                 y = V_MAX * np.e ** (-np.abs(t_in_original_period - period))
 
             res.append(y)
+
+        res = np.asarray(res)
         return res
 
     def create_dirac_signal(self):
@@ -91,6 +91,28 @@ class Signal:
         self.period = period
         self.duty_cycle = duty_cycle
         self.signalType = SignalTypes.SQUARE
+
+    def create_half_sine_signal(self, hz_frequency, amplitude, phase=0):
+        self.yValues = self.evaluate_half_sine(self.timeArray, hz_frequency, amplitude, phase)
+        self.signalType = SignalTypes.HALFSINE
+        self.period = 1 / hz_frequency * 3 / 2
+
+    def evaluate_half_sine(self, time_array: list, freq, amplitude, phase):
+        res = []
+        period = 3 / 2 * 1/freq
+        for t in time_array + 1 / (2 * freq):
+            t_in_original_period = float(Decimal(str(t)) % Decimal(str(period)))
+            if t_in_original_period < 0:
+                t_in_original_period = period - t_in_original_period
+            if t_in_original_period < (1 / freq) / 2:
+                y = amplitude * np.sin(t_in_original_period * 2 * np.pi * freq + phase)
+            else:
+                y = amplitude * np.sin((t_in_original_period - period) * 2 * np.pi * freq + phase)
+
+            res.append(y)
+
+        res = np.asarray(res)
+        return res
 
     def change_time_array(self, time_array):
         self.timeArray = time_array.copy()
@@ -106,7 +128,8 @@ class SignalTypes(Enum):
     EXPONENTIAL = 1,
     DELTA_DIRAC = 2,
     SQUARE = 3,
-    CUSTOM = 4
+    CUSTOM = 4,
+    HALFSINE = 5
 
 
 class PlotTypes(Enum):

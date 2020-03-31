@@ -126,7 +126,7 @@
            <item>
             <layout class="QVBoxLayout" name="params">
              <item alignment="Qt::AlignHCenter">
-              <widget class="QRadioButton" name="halfseno">
+              <widget class="QRadioButton" name="halfSineRadio">
                <property name="text">
                 <string>3/2 seno</string>
                </property>
