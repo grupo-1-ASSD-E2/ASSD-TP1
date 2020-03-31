@@ -108,6 +108,20 @@ bottom-margin:3px;
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
+         <widget class="QPushButton" name="seeSpectrum">
+          <property name="styleSheet">
+           <string notr="true">font: 63 8pt &quot;Open Sans Semibold&quot;;
+color:rgb(255, 255, 255);
+padding: 8px;
+bottom-margin:3px;
+</string>
+          </property>
+          <property name="text">
+           <string>Ver Espectro</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="removeSignal">
           <property name="styleSheet">
            <string notr="true">font: 63 8pt &quot;Open Sans Semibold&quot;;

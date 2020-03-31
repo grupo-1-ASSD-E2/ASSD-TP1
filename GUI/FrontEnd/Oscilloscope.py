@@ -5,6 +5,8 @@ from BackEnd.Signal import PlotTypes
 
 from BackEnd.Signal import Signal
 
+from GUI.FrontEnd.SpectrumAnalyzer import SpectrumAnalyzer
+
 
 class Oscilloscope(QMainWindow):
 
@@ -13,6 +15,7 @@ class Oscilloscope(QMainWindow):
         self.program_state = {}
         self.plot_signals = []
         self.hidden = True
+        self.spectrumAnalyzer = SpectrumAnalyzer()
 
     def closeEvent(self, event):
 
@@ -22,14 +25,21 @@ class Oscilloscope(QMainWindow):
 
     def __show_oscilloscope__(self):
 
-        loadUi('GUI/FrontEnd/oscilloscope.ui', self)
+        loadUi('../GUI/FrontEnd/oscilloscope.ui', self)
         self.setWindowTitle("Osciloscopio")
         self.removeSignal.clicked.connect(self.remove_signal_from_oscilloscope)
         self.removeAllSignals.clicked.connect(self.remove_all_signals_from_oscilloscope)
         self.toggleSignal.clicked.connect(self.toggle_signal)
+        self.seeSpectrum.clicked.connect(self.see_spectrum)
         self.plot_current_signals()
 
         self.show()
+
+    def see_spectrum(self):
+        index = self.signalList.currentRow()
+        if index != -1:
+            if self.plot_signals[index] is not None:
+                self.spectrumAnalyzer.add_signal_to_spectrum_analyzer(self.plot_signals[index])
 
     def toggle_signal(self):
         index = self.signalList.currentRow()
@@ -93,7 +103,7 @@ class Oscilloscope(QMainWindow):
                             min_period = signal.period
 
         if period_found:
-            self.oscilloscopeGraph.canvas.axes.set(xlim=(0, 7* min_period))
+            self.oscilloscopeGraph.canvas.axes.set(xlim=(0, 7 * min_period))
             self.oscilloscopeGraph.canvas.axes.set_ylim(auto=True)
         else:
             self.oscilloscopeGraph.canvas.axes.axis('auto')

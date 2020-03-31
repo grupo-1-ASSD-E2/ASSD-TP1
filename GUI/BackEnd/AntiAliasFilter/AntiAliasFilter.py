@@ -5,6 +5,8 @@ import numpy as np
 
 from BackEnd.Filter import Filter
 
+from GUI.BackEnd.Signal import Signal
+
 
 class AntiAliasFilter(Filter):
     def __init__(self):
@@ -46,14 +48,17 @@ class AntiAliasFilter(Filter):
         self.blockActivated = not deactivate
 
     def apply_to_signal(self, signal_in):
+        returning_signal = Signal(None)
+        returning_signal.copy_signal(signal_in)
         if self.blockActivated:
             if 1/signal_in.period <= 8 :
                 tout, y, ni = signal.lsim((self.b1, self.a1), signal_in.yValues, signal_in.timeArray)
-                signal_in.set_x_y_values(tout, y)
+                returning_signal.set_x_y_values(tout, y)
             elif 1/signal_in.period <= 1800 and 1/signal_in.period > 8:
                 tout, y, ni = signal.lsim((self.b2, self.a2), signal_in.yValues, signal_in.timeArray)
-                signal_in.set_x_y_values(tout, y)
+                returning_signal.set_x_y_values(tout, y)
             else:
                 tout, y, ni = signal.lsim((self.b3, self.a3), signal_in.yValues, signal_in.timeArray)
-                signal_in.set_x_y_values(tout, y)
+                returning_signal.set_x_y_values(tout, y)
+        return returning_signal
 

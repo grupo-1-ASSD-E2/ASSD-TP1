@@ -21,6 +21,8 @@ class AnalogSwitch(Filter):
         self.blockActivated = not deactivate
 
     def apply_to_signal(self, signal_in):
+        returning_signal = Signal(None)
+        returning_signal.copy_signal(signal_in)
         if self.blockActivated:
 
             out_x_array = signal_in.timeArray.copy()
@@ -32,8 +34,9 @@ class AnalogSwitch(Filter):
                 else:
                     out_y_array[it] = 0
 
-            signal_in.set_x_y_values(out_x_array, out_y_array)
-            signal_in.set_step_plot(True)
+            returning_signal.set_x_y_values(out_x_array, out_y_array)
+            returning_signal.set_step_plot(True)
+        return returning_signal
 
     def get_filter_freq_response(self):
         return self.angularFreq, self.freqResponse

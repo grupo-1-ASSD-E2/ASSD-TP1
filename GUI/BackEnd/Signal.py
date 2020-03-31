@@ -16,6 +16,8 @@ class Signal:
         self.spectrumAnalyzerPlotActivated = True  # Permite togglear una senal en el analizador de espectro
         self.period = -1
         self.duty_cycle = 1
+        self.f_A = None
+        self.X_A = None
 
     def copy_signal(self, signal):
         self.yValues = signal.yValues.copy()
@@ -26,6 +28,9 @@ class Signal:
         self.oscilloscopePlotActivated = signal.oscilloscopePlotActivated
         self.spectrumAnalyzerPlotActivated = signal.spectrumAnalyzerPlotActivated
         self.period = signal.period
+        self.X_A = signal.X_A
+        self.f_A = signal.f_A
+        self.duty_cycle = signal.duty_cycle
 
     def toggle_oscilloscope_plot(self):
         self.oscilloscopePlotActivated = not self.oscilloscopePlotActivated
@@ -39,13 +44,13 @@ class Signal:
         else:
             self.plotType = PlotTypes.NORMAL
 
-    def get_frequency_spectrum(self):
-        X_A = np.fft.fft(self.yValues)
+    def calculate_frequency_spectrum(self):
+        self.X_A = np.fft.fft(self.yValues)
         t_step_A = np.abs(self.timeArray[0] - self.timeArray[1])
         N_A = self.yValues.size
-        f_A = np.fft.fftfreq(N_A, d=t_step_A)
+        self.f_A = np.fft.fftfreq(N_A, d=t_step_A)
 
-        return f_A, X_A
+
 
     def set_x_y_values(self, x_values, y_values):
         self.timeArray = x_values.copy()

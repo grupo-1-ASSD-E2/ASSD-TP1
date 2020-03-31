@@ -20,9 +20,9 @@ class SpectrumAnalyzer(QMainWindow):
         self.plot_signals.clear()
         event.accept()  # let the window close
 
-    def __show_oscilloscope__(self):
+    def __show_spectrum_analyzer__(self):
 
-        loadUi('GUI/FrontEnd/spectrum_analyzer.ui', self)
+        loadUi('../GUI/FrontEnd/spectrum_analyzer.ui', self)
         self.setWindowTitle("Analizador de Espectro")
         self.removeSignal.clicked.connect(self.remove_signal_from_spectrum_analyzer)
         self.removeAllSignals.clicked.connect(self.remove_all_signals_from_spectrum_analyzer)
@@ -38,16 +38,16 @@ class SpectrumAnalyzer(QMainWindow):
                 self.plot_signals[index].toggle_spectrum_analyzer_plot()
         self.plot_current_signals()
 
-    def add_signal_to_oscilloscope(self, signal):
+    def add_signal_to_spectrum_analyzer(self, signal):
         if self.hidden:
             self.hidden = False
-            self.__show_oscilloscope__()
+            self.__show_spectrum_analyzer__()
         new_signal = Signal(signal.timeArray)
         new_signal.copy_signal(signal)
         self.plot_signals.append(new_signal)
         list_widget_item = QListWidgetItem(new_signal.description)
         self.signalList.addItem(list_widget_item)
-        self.plot_current_signals()
+        self.plot_invidivual_signal(new_signal)
 
     def remove_signal_from_spectrum_analyzer(self):
         index = self.signalList.currentRow()
@@ -63,6 +63,36 @@ class SpectrumAnalyzer(QMainWindow):
         self.signalList.clear()
         self.plot_current_signals()
 
+    def plot_invidivual_signal(self, signal):
+        self.spectrumGraph.figure.tight_layout()
+        self.spectrumGraph.canvas.axes.set_xscale('log')
+        self.spectrumGraph.canvas.axes.set_xlabel("f [Hz]")
+        self.spectrumGraph.canvas.axes.set_ylabel("A [V]")
+        self.spectrumGraph.canvas.axes.axis('auto')
+        self.spectrumGraph.canvas.axes.yaxis.label.set_color('white')
+        self.spectrumGraph.canvas.axes.xaxis.label.set_color('white')
+        self.spectrumGraph.canvas.axes.grid(True, which="both")
+
+        if signal.spectrumAnalyzerPlotActivated:
+
+            signal.calculate_frequency_spectrum()
+            freq_values = signal.f_A
+            y_values = signal.X_A
+
+            fo = (freq_values[2] - freq_values[1]) / 20
+            width = 30
+            if freq_values[1] != 0:
+                width = fo * freq_values / freq_values[1]
+
+            self.spectrumGraph.canvas.axes.bar(freq_values, (np.abs(y_values) * 1 / signal.yValues.size),
+                                               label=signal.description,
+                                               width=width)
+            # self.spectrumGraph.canvas.axes.set_xlim( left=-5000, right=5000)
+
+        self.spectrumGraph.canvas.axes.legend(loc='best')
+
+        self.spectrumGraph.canvas.draw()  # Redraw
+
     def plot_current_signals(self):
         self.spectrumGraph.canvas.axes.clear()
         self.spectrumGraph.figure.tight_layout()
@@ -76,7 +106,10 @@ class SpectrumAnalyzer(QMainWindow):
 
         for signal in self.plot_signals:
             if signal.spectrumAnalyzerPlotActivated:
-                freq_values, y_values = signal.get_frequency_spectrum()
+
+                signal.calculate_frequency_spectrum()
+                freq_values = signal.f_A
+                y_values = signal.X_A
 
                 fo = (freq_values[2] - freq_values[1]) / 20
                 width = 30
@@ -86,9 +119,8 @@ class SpectrumAnalyzer(QMainWindow):
                 self.spectrumGraph.canvas.axes.bar(freq_values, (np.abs(y_values) * 1 / signal.yValues.size),
                                                    label=signal.description,
                                                    width=width)
-                #self.spectrumGraph.canvas.axes.set_xlim( left=-5000, right=5000)
+                # self.spectrumGraph.canvas.axes.set_xlim( left=-5000, right=5000)
 
         self.spectrumGraph.canvas.axes.legend(loc='best')
-        self.spectrumGraph.figure.tight_layout()
 
         self.spectrumGraph.canvas.draw()  # Redraws
