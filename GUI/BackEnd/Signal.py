@@ -114,6 +114,12 @@ class Signal:
         res = np.asarray(res)
         return res
 
+    def create_am_signal(self, hz_frequency, amplitude, phase=0):
+        self.yValues = amplitude *( 1 / 2 * np.cos(self.timeArray * 2 * np.pi * 1.8 * hz_frequency + phase) + 
+                        np.cos(self.timeArray * 2 * np.pi * 2 * hz_frequency + phase) + 1 / 2 * np.cos(self.timeArray * 2 * np.pi * 2.2 * hz_frequency + phase) )
+        self.signalType = SignalTypes.AM
+        self.period = 5 / hz_frequency
+
     def change_time_array(self, time_array):
         self.timeArray = time_array.copy()
         if self.signalType == SignalTypes.SQUARE:
@@ -214,6 +220,7 @@ class SignalTypes(Enum):
     SQUARE = 3,
     CUSTOM = 4,
     HALFSINE = 5
+    AM = 6
 
 
 class PlotTypes(Enum):

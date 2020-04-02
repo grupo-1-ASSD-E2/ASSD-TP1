@@ -140,6 +140,8 @@ class UIWindow(QMainWindow):
         self.expRadio.setChecked(False)
         self.halfSineRadio.setChecked(False)
         self.amRadio.setChecked(False)
+        self.halfSineRadio.setVisible(True)
+        self.amRadio.setVisible(True)
         
         self.xinFunction.setText("Xin = Vp*cos(2π*f*t+θ)")
         self.__enable_param_box__(1)
@@ -319,7 +321,7 @@ class UIWindow(QMainWindow):
             phase_mult_text = self.param3Unit.currentText()
             phase_mult_value = self.phaseMultipliers[phase_mult_text]
 
-            time_array = np.arange(0, 7 / total_freq, 0.003 * (1 / total_freq))
+            time_array = np.arange(0, (7 * 3/2) / total_freq, 0.003 * ((3/2) / total_freq))
             xin_signal = Signal(time_array)
 
             xin_signal.create_half_sine_signal(total_freq, amplitude * amplitude_mult_value, 
@@ -343,9 +345,18 @@ class UIWindow(QMainWindow):
             phase_mult_text = self.param3Unit.currentText()
             phase_mult_value = self.phaseMultipliers[phase_mult_text]
 
-            time_array = np.arange(0, 7 / total_freq, 0.003 * (1 / total_freq))
+            time_array = np.arange(0, 7 * 5 / total_freq, 0.003 * (5 / total_freq))
             xin_signal = Signal(time_array)
             
+            xin_signal.create_am_signal(total_freq, amplitude * amplitude_mult_value, 
+                                              phase=phase * phase_mult_value)
+            xin_signal.add_description("Input: Señal AM")                                  
+            '''xin_signal.add_description("Input: " + str(amplitude) + amplitude_mult_text + "*(1/2*cos(2π*1,8*" + str(freq) + freq_mult_text + "*t + " + str(
+                                       phase) + phase_mult_text + ") + cos(2π*2*" + str(freq) + freq_mult_text + "*t + " + str(
+                                       phase) + phase_mult_text + ") + 1/2*cos(2π*2,2*" + str(freq) + freq_mult_text + "*t + " + str(
+                                       phase) + phase_mult_text + ")), período: " + str((5 / total_freq)) + "s")'''
+
+            self.data.xin_changed(xin_signal)
 
         elif self.expRadio.isChecked():
             vmax_v = self.param1Value.value()
@@ -357,7 +368,7 @@ class UIWindow(QMainWindow):
             period_mult_value = self.periodMultipliers[period_mult_text]
             total_period = period_value * period_mult_value
 
-            time_array = np.arange(0, 5 * total_period, 0.01 * total_period)
+            time_array = np.arange(0, 7 * total_period, 0.003 * 7 * total_period)
             xin_signal = Signal(time_array)
 
             xin_signal.create_exp_signal(vmax_v * vmax_unit_value, total_period)
