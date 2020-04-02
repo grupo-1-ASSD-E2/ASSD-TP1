@@ -2,7 +2,9 @@ from enum import Enum
 import numpy as np
 import matplotlib.pyplot as plt
 from decimal import Decimal
-from scipy import signal as scipySignal
+from scipy import signal as ss
+import numpy as np
+import scipy.signal as ss
 
 
 class Signal:
@@ -58,7 +60,7 @@ class Signal:
 
         self.yValues = amplitude * np.cos(self.timeArray * 2 * np.pi * hz_frequency + phase)
         self.signalType = SignalTypes.SINUSOIDAL
-        self.period = 1 / hz_frequency 
+        self.period = 1 / hz_frequency
 
     def create_exp_signal(self, v_max, period):
         self.yValues = self.evaluate_periodic_exp(self.timeArray, period, v_max)
@@ -82,12 +84,12 @@ class Signal:
         return res
 
     def create_dirac_signal(self):
-        self.yValues = scipySignal.unit_impulse(len(self.timeArray), 0)
+        self.yValues = ss.unit_impulse(len(self.timeArray), 0)
 
     # periodo en s y dutycicle de 0 a 1
     def create_square_signal(self, duty_cycle, period):
-        self.yValues = (0.5 * scipySignal.square(2 * np.pi * self.timeArray * 1 / period,
-                                                 duty_cycle / 100) + 0.5)  # Los 0.5 hacen que quede entre 0 y 1
+        self.yValues = (0.5 * ss.square(2 * np.pi * self.timeArray * 1 / period,
+                                        duty_cycle / 100) + 0.5)  # Los 0.5 hacen que quede entre 0 y 1
         self.period = period
         self.duty_cycle = duty_cycle
         self.signalType = SignalTypes.SQUARE
@@ -99,7 +101,7 @@ class Signal:
 
     def evaluate_half_sine(self, time_array: list, freq, amplitude, phase):
         res = []
-        period = 3 / 2 * 1/freq
+        period = 3 / 2 * 1 / freq
         for t in time_array + 1 / (2 * freq):
             t_in_original_period = float(Decimal(str(t)) % Decimal(str(period)))
             if t_in_original_period < 0:
@@ -121,6 +123,78 @@ class Signal:
 
     def add_description(self, description):
         self.description = description
+
+    def compute_fft(self, time_interval, signal, period, n_periods=1, window='boxcar'):
+        ''' window can be:
+            'boxcar' (rectangle),
+            'barthann' (Bartlett-Hann),
+            'bartlett',
+            'hanning',
+            'hamming',
+            'tukey',
+            'flattop',
+            'hann',
+            'nuttall',
+            'parzen',
+            'cosine',
+            'blackman',
+            'bohman',
+            'blackmanharris' '''
+
+        t_step = (max(time_interval) - min(time_interval)) / len(time_interval)
+        points_in_period = int(np.rint(period / t_step))
+
+        try:
+            window = getattr(ss, window)((points_in_period * n_periods))
+            amount_of_zeros_to_pad = len(signal) - len(window)
+            window = np.append(window, [0] * amount_of_zeros_to_pad)
+            signal_for_fft = np.multiply(signal, window)[:(points_in_period * n_periods)]
+        except AttributeError:
+            return
+
+        fft = np.fft.fft(signal_for_fft)
+        N = signal_for_fft.size
+        f = np.fft.fftfreq(N, d=t_step)
+
+        return f, fft, N
+
+    def fft(self, time_interval, signal, period, mode='fast'):
+        ''' time_interval: array containing time values for the signal meant to be transformed.
+
+            signal: array containing signal meant to be transformed.
+
+            period: period of the signal to be transformed.
+
+            If mode='fast', only one period will be used from the input signal.
+            If mode='best', the max amount of periods will be used.
+            'fast' is default.'''
+
+        if mode == 'best':
+            n_p = int(np.rint((max(time_interval) - min(time_interval)) / period))
+        elif mode == 'fast':
+            n_p = 1
+        else:
+            return
+
+        window_types = ['boxcar', 'barthann', 'bartlett', 'hanning', 'hamming', 'tukey', 'hann', 'nuttall', 'parzen',
+                        'cosine', 'blackman', 'bohman', 'blackmanharris']
+
+        fft = []
+        merits = []
+        for w in window_types:
+            f, X, N = self.compute_fft(time_interval, signal, period, n_periods=n_p, window=w)
+            new_fft = [f, X, N, w]
+            fft.append(new_fft)
+
+            merit = 0
+            max_bin = max(np.abs(X))
+            for X_bin in X:
+                if np.abs(X_bin) < (0.2 * max_bin):
+                    merit = merit + np.abs(X_bin)
+
+            merits.append(merit)
+
+        return fft[merits.index(min(merits))]
 
 
 class SignalTypes(Enum):
