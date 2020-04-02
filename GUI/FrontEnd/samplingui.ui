@@ -19,7 +19,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout" stretch="50,50">
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout" stretch="50,50">
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,50">
       <item>
        <widget class="QGroupBox" name="groupBox_2">
         <property name="styleSheet">
@@ -125,12 +125,23 @@
            </item>
            <item>
             <layout class="QVBoxLayout" name="params">
-             <item alignment="Qt::AlignHCenter">
-              <widget class="QRadioButton" name="halfSineRadio">
-               <property name="text">
-                <string>3/2 seno</string>
-               </property>
-              </widget>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_6">
+               <item>
+                <widget class="QRadioButton" name="amRadio">
+                 <property name="text">
+                  <string>AM</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="halfSineRadio">
+                 <property name="text">
+                  <string>3/2 seno</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
              <item>
               <layout class="QHBoxLayout" name="param1box" stretch="15,50,35">
@@ -372,7 +383,7 @@ font-size: 18px
               <enum>Qt::AutoText</enum>
              </property>
              <property name="pixmap">
-              <pixmap>C:/Users/pabli/Desktop/pwm.jpg</pixmap>
+              <pixmap>../../../../../../../../pabli/Desktop/pwm.jpg</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>

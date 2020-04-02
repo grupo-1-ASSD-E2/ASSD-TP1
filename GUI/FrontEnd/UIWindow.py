@@ -53,6 +53,7 @@ class UIWindow(QMainWindow):
         self.expRadio.toggled.connect(self.exp_radio_toggled)
         self.sineRadio.toggled.connect(self.sine_radio_toggled)
         self.halfSineRadio.toggled.connect(self.half_sine_radio_toggled)
+        self.amRadio.toggled.connect(self.am_radio_toggled)
         self.refreshXinButton.clicked.connect(self.refresh_xin_clicked)
         self.analogPlotButton.clicked.connect(self.analog_plot_clicked)
         self.antiAliasPlotButton.clicked.connect(self.anti_alias_plot_clicked)
@@ -95,6 +96,9 @@ class UIWindow(QMainWindow):
         self.sineRadio.setChecked(False)
         self.expRadio.setChecked(False)
         self.halfSineRadio.setChecked(False)
+        self.amRadio.setChecked(False)
+        self.halfSineRadio.setVisible(False)
+        self.amRadio.setVisible(False)
 
         self.xinFunction.setText("Xin = δ(t)")
 
@@ -106,6 +110,10 @@ class UIWindow(QMainWindow):
         self.sineRadio.setChecked(False)
         self.pulseRadio.setChecked(False)
         self.halfSineRadio.setChecked(False)
+        self.amRadio.setChecked(False)
+        self.halfSineRadio.setVisible(False)
+        self.amRadio.setVisible(False)
+
 
         self.xinFunction.setText("Xin = Vmax*e^(-|t|), período T.")
 
@@ -131,6 +139,7 @@ class UIWindow(QMainWindow):
         self.pulseRadio.setChecked(False)
         self.expRadio.setChecked(False)
         self.halfSineRadio.setChecked(False)
+        self.amRadio.setChecked(False)
         
         self.xinFunction.setText("Xin = Vp*cos(2π*f*t+θ)")
         self.__enable_param_box__(1)
@@ -162,6 +171,7 @@ class UIWindow(QMainWindow):
         self.pulseRadio.setChecked(False)
         self.expRadio.setChecked(False)
         self.sineRadio.setChecked(False)
+        self.amRadio.setChecked(False)
         
         self.xinFunction.setText("Xin = Vp*sin(2π*f*t+θ), período: 3/(2*f)")
         self.__enable_param_box__(1)
@@ -189,6 +199,37 @@ class UIWindow(QMainWindow):
         for unit in self.phaseMultipliers.keys():
             self.param3Unit.addItem(unit)
 
+    def am_radio_toggled(self):
+        self.pulseRadio.setChecked(False)
+        self.expRadio.setChecked(False)
+        self.sineRadio.setChecked(False)
+        self.halfSineRadio.setChecked(False)
+        
+        self.xinFunction.setText("Xin = Vp*(1/2*cos(2π*1,8*f*t+θ) + cos(2π*2*f*t+θ) + 1/2*cos(2π*2,2*f*t+θ))")
+        self.__enable_param_box__(1)
+        self.__enable_param_box__(2)
+        self.__enable_param_box__(3)
+
+        self.param1Title.setText("Vp")
+        self.param1Value.setMinimum(self.minTension)
+        self.param1Value.setValue(self.minTension)
+        self.param1Unit.clear()
+        for unit in self.tensionMultipliers.keys():
+            self.param1Unit.addItem(unit)
+
+        self.param2Title.setText("f")
+        self.param2Value.setMinimum(self.minFreq)
+        self.param2Value.setValue(self.minFreq)
+        self.param2Unit.clear()
+        for unit in self.frequencyMultipliers.keys():
+            self.param2Unit.addItem(unit)
+
+        self.param3Title.setText("θ")
+        self.param3Value.setMinimum(self.minPhase)
+        self.param3Value.setValue(self.minPhase)
+        self.param3Unit.clear()
+        for unit in self.phaseMultipliers.keys():
+            self.param3Unit.addItem(unit)
 
     def __disable_param_box__(self, nr_of_param):
         if nr_of_param == 3:
@@ -287,6 +328,24 @@ class UIWindow(QMainWindow):
                                        phase) + phase_mult_text + " ), período: " + str( (3 / 2) * (1 / total_freq) ) + "s")
 
             self.data.xin_changed(xin_signal)
+
+        elif self.amRadio.isChecked():
+            freq = self.param2Value.value()
+            freq_mult_text = self.param2Unit.currentText()
+            freq_mult_value = self.frequencyMultipliers[freq_mult_text]
+            total_freq = freq * freq_mult_value
+
+            amplitude = self.param1Value.value()
+            amplitude_mult_text = self.param1Unit.currentText()
+            amplitude_mult_value = self.tensionMultipliers[amplitude_mult_text]
+
+            phase = self.param3Value.value()
+            phase_mult_text = self.param3Unit.currentText()
+            phase_mult_value = self.phaseMultipliers[phase_mult_text]
+
+            time_array = np.arange(0, 7 / total_freq, 0.003 * (1 / total_freq))
+            xin_signal = Signal(time_array)
+            
 
         elif self.expRadio.isChecked():
             vmax_v = self.param1Value.value()
