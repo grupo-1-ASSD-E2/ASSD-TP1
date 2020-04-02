@@ -177,7 +177,7 @@ class Signal:
         else:
             return
 
-        if window == 'Automático':
+        if window == 'Automática':
             window_types = Signal.get_window_types()
 
             fft = []
