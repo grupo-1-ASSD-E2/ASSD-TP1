@@ -24,8 +24,10 @@ class Oscilloscope(QMainWindow):
         event.accept()  # let the window close
 
     def __show_oscilloscope__(self):
-
-        loadUi('../GUI/FrontEnd/oscilloscope.ui', self)
+        try:
+            loadUi('../GUI/FrontEnd/oscilloscope.ui', self)
+        except:
+            loadUi('GUI/FrontEnd/oscilloscope.ui', self)
         self.setWindowTitle("Osciloscopio")
 
         self.spectrumWindowCombo.addItem("Automática")

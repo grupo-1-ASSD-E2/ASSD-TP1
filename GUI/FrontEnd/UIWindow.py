@@ -21,7 +21,10 @@ class UIWindow(QMainWindow):
 
         self.oscilloscope = Oscilloscope()
         self.program_state = {}
-        loadUi('../GUI/FrontEnd/samplingui.ui', self)
+        try:
+            loadUi('../GUI/FrontEnd/samplingui.ui', self)
+        except:
+            loadUi('GUI/FrontEnd/samplingui.ui', self)
 
         self.minTension = 1
         self.minFreq = 1

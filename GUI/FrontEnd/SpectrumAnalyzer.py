@@ -22,7 +22,10 @@ class SpectrumAnalyzer(QMainWindow):
 
     def __show_spectrum_analyzer__(self):
 
-        loadUi('../GUI/FrontEnd/spectrum_analyzer.ui', self)
+        try:
+            loadUi('../GUI/FrontEnd/spectrum_analyzer.ui', self)
+        except:
+            loadUi('GUI/FrontEnd/spectrum_analyzer.ui', self)
         self.setWindowTitle("Analizador de Espectro")
         self.removeSignal.clicked.connect(self.remove_signal_from_spectrum_analyzer)
         self.removeAllSignals.clicked.connect(self.remove_all_signals_from_spectrum_analyzer)
@@ -65,7 +68,7 @@ class SpectrumAnalyzer(QMainWindow):
 
     def plot_invidivual_signal(self, signal):
         self.spectrumGraph.figure.tight_layout()
-        self.spectrumGraph.canvas.axes.set_xscale('log')
+        self.spectrumGraph.canvas.axes.set_xscale('linear')
         self.spectrumGraph.canvas.axes.set_xlabel("f [Hz]")
         self.spectrumGraph.canvas.axes.set_ylabel("A [V]")
         self.spectrumGraph.canvas.axes.axis('auto')
@@ -79,16 +82,16 @@ class SpectrumAnalyzer(QMainWindow):
             y_values = signal.spectrum[1]
 
             window = signal.spectrum[3]
-
+            '''
             fo = (freq_values[2] - freq_values[1]) / 20
             width = 30
             if freq_values[1] != 0:
-                width = fo * freq_values / freq_values[1]
+                width = fo * freq_values / freq_values[1]'''
 
             self.spectrumGraph.canvas.axes.bar(freq_values, (np.abs(y_values) * 1 / signal.yValues.size),
                                                label=signal.description + '. Ventana: ' + window,
-                                               width=width)
-            # self.spectrumGraph.canvas.axes.set_xlim( left=-5000, right=5000)
+                                               width=40)
+            self.spectrumGraph.canvas.axes.set_xlim( left=-10000, right=10000)
 
         self.spectrumGraph.canvas.axes.legend(loc='best')
 
@@ -97,7 +100,7 @@ class SpectrumAnalyzer(QMainWindow):
     def plot_current_signals(self):
         self.spectrumGraph.canvas.axes.clear()
         self.spectrumGraph.figure.tight_layout()
-        self.spectrumGraph.canvas.axes.set_xscale('log')
+        self.spectrumGraph.canvas.axes.set_xscale('linear')
         self.spectrumGraph.canvas.axes.set_xlabel("f [Hz]")
         self.spectrumGraph.canvas.axes.set_ylabel("A [V]")
         self.spectrumGraph.canvas.axes.axis('auto')
@@ -112,16 +115,16 @@ class SpectrumAnalyzer(QMainWindow):
                 y_values = signal.spectrum[1]
 
                 window = signal.spectrum[3]
-
+                '''
                 fo = (freq_values[2] - freq_values[1]) / 20
                 width = 30
                 if freq_values[1] != 0:
-                    width = fo * freq_values / freq_values[1]
+                    width = fo * freq_values / freq_values[1]'''
 
                 self.spectrumGraph.canvas.axes.bar(freq_values, (np.abs(y_values) * 1 / signal.yValues.size),
                                                    label=signal.description + '. Ventana: ' + window,
-                                                   width=width)
-                # self.spectrumGraph.canvas.axes.set_xlim( left=-5000, right=5000)
+                                                   width=40)
+                self.spectrumGraph.canvas.axes.set_xlim( left=-10000, right=10000)
 
         self.spectrumGraph.canvas.axes.legend(loc='best')
 
