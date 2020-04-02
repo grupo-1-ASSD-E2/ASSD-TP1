@@ -22,7 +22,7 @@ class SpectrumAnalyzer(QMainWindow):
 
     def __show_spectrum_analyzer__(self):
 
-        loadUi('GUI/FrontEnd/spectrum_analyzer.ui', self)
+        loadUi('../GUI/FrontEnd/spectrum_analyzer.ui', self)
         self.setWindowTitle("Analizador de Espectro")
         self.removeSignal.clicked.connect(self.remove_signal_from_spectrum_analyzer)
         self.removeAllSignals.clicked.connect(self.remove_all_signals_from_spectrum_analyzer)
@@ -45,7 +45,7 @@ class SpectrumAnalyzer(QMainWindow):
         new_signal = Signal(signal.timeArray)
         new_signal.copy_signal(signal)
         self.plot_signals.append(new_signal)
-        list_widget_item = QListWidgetItem(new_signal.description)
+        list_widget_item = QListWidgetItem(new_signal.description + ' Ventana: ' + new_signal.spectrum[3])
         self.signalList.addItem(list_widget_item)
         self.plot_invidivual_signal(new_signal)
 
@@ -75,9 +75,10 @@ class SpectrumAnalyzer(QMainWindow):
 
         if signal.spectrumAnalyzerPlotActivated:
 
-            signal.calculate_frequency_spectrum()
-            freq_values = signal.f_A
-            y_values = signal.X_A
+            freq_values = signal.spectrum[0]
+            y_values = signal.spectrum[1]
+
+            window = signal.spectrum[3]
 
             fo = (freq_values[2] - freq_values[1]) / 20
             width = 30
@@ -85,7 +86,7 @@ class SpectrumAnalyzer(QMainWindow):
                 width = fo * freq_values / freq_values[1]
 
             self.spectrumGraph.canvas.axes.bar(freq_values, (np.abs(y_values) * 1 / signal.yValues.size),
-                                               label=signal.description,
+                                               label=signal.description + '. Ventana: ' + window,
                                                width=width)
             # self.spectrumGraph.canvas.axes.set_xlim( left=-5000, right=5000)
 
@@ -107,9 +108,10 @@ class SpectrumAnalyzer(QMainWindow):
         for signal in self.plot_signals:
             if signal.spectrumAnalyzerPlotActivated:
 
-                signal.calculate_frequency_spectrum()
-                freq_values = signal.f_A
-                y_values = signal.X_A
+                freq_values = signal.spectrum[0]
+                y_values = signal.spectrum[1]
+
+                window = signal.spectrum[3]
 
                 fo = (freq_values[2] - freq_values[1]) / 20
                 width = 30
@@ -117,7 +119,7 @@ class SpectrumAnalyzer(QMainWindow):
                     width = fo * freq_values / freq_values[1]
 
                 self.spectrumGraph.canvas.axes.bar(freq_values, (np.abs(y_values) * 1 / signal.yValues.size),
-                                                   label=signal.description,
+                                                   label=signal.description + '. Ventana: ' + window,
                                                    width=width)
                 # self.spectrumGraph.canvas.axes.set_xlim( left=-5000, right=5000)
 

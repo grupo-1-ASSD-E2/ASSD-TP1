@@ -18,8 +18,7 @@ class Signal:
         self.spectrumAnalyzerPlotActivated = True  # Permite togglear una senal en el analizador de espectro
         self.period = -1
         self.duty_cycle = 1
-        self.f_A = None
-        self.X_A = None
+        self.spectrum = None #f, X, N, window
 
     def copy_signal(self, signal):
         self.yValues = signal.yValues.copy()
@@ -30,8 +29,7 @@ class Signal:
         self.oscilloscopePlotActivated = signal.oscilloscopePlotActivated
         self.spectrumAnalyzerPlotActivated = signal.spectrumAnalyzerPlotActivated
         self.period = signal.period
-        self.X_A = signal.X_A
-        self.f_A = signal.f_A
+        self.spectrum = signal.spectrum
         self.duty_cycle = signal.duty_cycle
 
     def toggle_oscilloscope_plot(self):
@@ -145,6 +143,7 @@ class Signal:
         points_in_period = int(np.rint(period / t_step))
 
         try:
+            window = window.lower()
             window = getattr(ss, window)((points_in_period * n_periods))
             amount_of_zeros_to_pad = len(signal) - len(window)
             window = np.append(window, [0] * amount_of_zeros_to_pad)
@@ -158,7 +157,7 @@ class Signal:
 
         return f, fft, N
 
-    def fft(self, time_interval, signal, period, mode='fast'):
+    def fft(self, mode='fast', window = 'Automática'):
         ''' time_interval: array containing time values for the signal meant to be transformed.
 
             signal: array containing signal meant to be transformed.
@@ -168,7 +167,9 @@ class Signal:
             If mode='fast', only one period will be used from the input signal.
             If mode='best', the max amount of periods will be used.
             'fast' is default.'''
-
+        time_interval = self.timeArray
+        signal = self.yValues
+        period = self.period
         if mode == 'best':
             n_p = int(np.rint((max(time_interval) - min(time_interval)) / period))
         elif mode == 'fast':
@@ -176,25 +177,34 @@ class Signal:
         else:
             return
 
-        window_types = ['boxcar', 'barthann', 'bartlett', 'hanning', 'hamming', 'tukey', 'hann', 'nuttall', 'parzen',
-                        'cosine', 'blackman', 'bohman', 'blackmanharris']
+        if window == 'Automático':
+            window_types = Signal.get_window_types()
 
-        fft = []
-        merits = []
-        for w in window_types:
-            f, X, N = self.compute_fft(time_interval, signal, period, n_periods=n_p, window=w)
-            new_fft = [f, X, N, w]
-            fft.append(new_fft)
+            fft = []
+            merits = []
+            for w in window_types:
+                f, X, N = self.compute_fft(time_interval, signal, period, n_periods=n_p, window=w)
+                new_fft = [f, X, N, w]
+                fft.append(new_fft)
 
-            merit = 0
-            max_bin = max(np.abs(X))
-            for X_bin in X:
-                if np.abs(X_bin) < (0.2 * max_bin):
-                    merit = merit + np.abs(X_bin)
+                merit = 0
+                max_bin = max(np.abs(X))
+                for X_bin in X:
+                    if np.abs(X_bin) < (0.2 * max_bin):
+                        merit = merit + np.abs(X_bin)
 
-            merits.append(merit)
+                merits.append(merit)
+            self.spectrum = f, X, N, window
+            return fft[merits.index(min(merits))]
+        else:
+            f, X, N = self.compute_fft(time_interval, signal, period, n_periods=n_p, window=window)
+            self.spectrum = f, X, N, window
+            return f, X, N, window
 
-        return fft[merits.index(min(merits))]
+    @staticmethod
+    def get_window_types():
+        return ['Boxcar', 'Barthann', 'Bartlett', 'Hanning', 'Hamming', 'Tukey', 'Hann', 'Nuttall', 'Parzen',
+                        'Cosine', 'Blackman', 'Bohman', 'Blackmanharris']
 
 
 class SignalTypes(Enum):

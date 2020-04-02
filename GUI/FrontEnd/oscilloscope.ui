@@ -93,7 +93,7 @@ bottom-margin:3px;
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout">
+     <layout class="QHBoxLayout" name="horizontalLayout" stretch="60,12,27,1">
       <item>
        <widget class="QListWidget" name="signalList">
         <property name="styleSheet">
@@ -107,20 +107,6 @@ bottom-margin:3px;
       </item>
       <item>
        <layout class="QVBoxLayout" name="verticalLayout_2">
-        <item>
-         <widget class="QPushButton" name="seeSpectrum">
-          <property name="styleSheet">
-           <string notr="true">font: 63 8pt &quot;Open Sans Semibold&quot;;
-color:rgb(255, 255, 255);
-padding: 8px;
-bottom-margin:3px;
-</string>
-          </property>
-          <property name="text">
-           <string>Ver Espectro</string>
-          </property>
-         </widget>
-        </item>
         <item>
          <widget class="QPushButton" name="removeSignal">
           <property name="styleSheet">
@@ -164,6 +150,64 @@ bottom-margin:3px;
          </widget>
         </item>
        </layout>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox">
+        <property name="styleSheet">
+         <string notr="true">color:rgb(255, 255, 255);</string>
+        </property>
+        <property name="title">
+         <string>Espectro</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <item alignment="Qt::AlignHCenter">
+            <widget class="QLabel" name="label_3">
+             <property name="text">
+              <string>Ventana</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="spectrumWindowCombo"/>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_5">
+           <item alignment="Qt::AlignHCenter">
+            <widget class="QLabel" name="label_4">
+             <property name="text">
+              <string>Modo</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="spectrumModeCombo">
+             <item>
+              <property name="text">
+               <string>Rápido</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Preciso</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QPushButton" name="graphSpectrum">
+           <property name="text">
+            <string>Graficar Espectro</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
       </item>
       <item>
        <spacer name="horizontalSpacer">

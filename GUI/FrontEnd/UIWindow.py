@@ -21,7 +21,7 @@ class UIWindow(QMainWindow):
 
         self.oscilloscope = Oscilloscope()
         self.program_state = {}
-        loadUi('GUI/FrontEnd/samplingui.ui', self)
+        loadUi('../GUI/FrontEnd/samplingui.ui', self)
 
         self.minTension = 1
         self.minFreq = 1
@@ -370,7 +370,7 @@ class UIWindow(QMainWindow):
             to_plot_signal = self.data.get_signal(SignalOrder.XOut.value)
 
             aux_signal_description = to_plot_signal.description
-            aux_signal_description = "Analog Switch OUT. " + aux_signal_description
+            aux_signal_description = "Xout. " + aux_signal_description
             to_plot_signal.add_description(aux_signal_description)
 
             self.oscilloscope.add_signal_to_oscilloscope(to_plot_signal)

@@ -25,21 +25,40 @@ class Oscilloscope(QMainWindow):
 
     def __show_oscilloscope__(self):
 
-        loadUi('GUI/FrontEnd/oscilloscope.ui', self)
+        loadUi('../GUI/FrontEnd/oscilloscope.ui', self)
         self.setWindowTitle("Osciloscopio")
+
+        self.spectrumWindowCombo.addItem("Automática")
+        self.spectrumWindowCombo.addItems(Signal.get_window_types())
+
+
+
         self.removeSignal.clicked.connect(self.remove_signal_from_oscilloscope)
         self.removeAllSignals.clicked.connect(self.remove_all_signals_from_oscilloscope)
         self.toggleSignal.clicked.connect(self.toggle_signal)
-        self.seeSpectrum.clicked.connect(self.see_spectrum)
+
+        self.graphSpectrum.clicked.connect(self.graph_spectrum)
         self.plot_current_signals()
 
         self.show()
 
-    def see_spectrum(self):
+    def graph_spectrum(self):
+        mode = ''
+        if self.spectrumModeCombo.currentText() == 'Rápido':
+            mode = 'fast'
+        elif self.spectrumModeCombo.currentText() == 'Preciso':
+            mode = 'best'
+
+        window = self.spectrumWindowCombo.currentText()
+
         index = self.signalList.currentRow()
         if index != -1:
             if self.plot_signals[index] is not None:
+                self.plot_signals[index].fft(mode=mode, window=window)
+
                 self.spectrumAnalyzer.add_signal_to_spectrum_analyzer(self.plot_signals[index])
+
+
 
     def toggle_signal(self):
         index = self.signalList.currentRow()
