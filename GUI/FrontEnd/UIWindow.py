@@ -278,7 +278,7 @@ class UIWindow(QMainWindow):
             phase_mult_text = self.param3Unit.currentText()
             phase_mult_value = self.phaseMultipliers[phase_mult_text]
 
-            time_array = np.arange(0, 7 / total_freq, 0.003 * (1 / total_freq))
+            time_array = np.arange(0, 7 / total_freq, 0.0001 * (1 / total_freq))
             xin_signal = Signal(time_array)
 
             xin_signal.create_half_sine_signal(total_freq, amplitude * amplitude_mult_value, 
@@ -298,7 +298,7 @@ class UIWindow(QMainWindow):
             period_mult_value = self.periodMultipliers[period_mult_text]
             total_period = period_value * period_mult_value
 
-            time_array = np.arange(0, 5 * total_period, 0.01 * total_period)
+            time_array = np.arange(0, 7 * total_period, 0.01 * total_period)
             xin_signal = Signal(time_array)
 
             xin_signal.create_exp_signal(vmax_v * vmax_unit_value, total_period)
