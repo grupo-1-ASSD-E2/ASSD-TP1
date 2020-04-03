@@ -81,6 +81,12 @@ class SpectrumAnalyzer(QMainWindow):
             freq_values = signal.spectrum[0]
             y_values = signal.spectrum[1]
 
+            #saca los ceros para no graficar de mas
+            for i in y_values:
+                if i == '0':
+                    y_values.pop(i)
+                    freq_values.pop(i)
+
             window = signal.spectrum[3]
             '''
             fo = (freq_values[2] - freq_values[1]) / 20
