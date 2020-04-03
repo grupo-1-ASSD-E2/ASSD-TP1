@@ -94,9 +94,9 @@ class SpectrumAnalyzer(QMainWindow):
             if freq_values[1] != 0:
                 width = fo * freq_values / freq_values[1]'''
 
-            self.spectrumGraph.canvas.axes.bar(freq_values, (np.abs(y_values) * 1 / signal.yValues.size),
+            self.spectrumGraph.canvas.axes.scatter(freq_values, (np.abs(y_values) * 1 / signal.yValues.size),
                                                label=signal.description + '. Ventana: ' + window,
-                                               width=40)
+                                               )
             self.spectrumGraph.canvas.axes.set_xlim( left=-10000, right=10000)
 
         self.spectrumGraph.canvas.axes.legend(loc='best')
