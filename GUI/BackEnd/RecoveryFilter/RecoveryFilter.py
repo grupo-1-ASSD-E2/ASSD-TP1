@@ -51,10 +51,13 @@ class RecoveryFilter(Filter):
             if 1 / signal_in.period <= 8:
                 tout, y, ni = signal.lsim((self.b1, self.a1), signal_in.yValues, signal_in.timeArray)
                 returning_signal.set_x_y_values(tout, y)
+                returning_signal.cut_first_period()
             elif 1800 >= 1 / signal_in.period > 8:
                 tout, y, ni = signal.lsim((self.b2, self.a2), signal_in.yValues, signal_in.timeArray)
                 returning_signal.set_x_y_values(tout, y)
+                returning_signal.cut_first_period()
             else:
                 tout, y, ni = signal.lsim((self.b3, self.a3), signal_in.yValues, signal_in.timeArray)
                 returning_signal.set_x_y_values(tout, y)
+                returning_signal.cut_first_period()
         return returning_signal

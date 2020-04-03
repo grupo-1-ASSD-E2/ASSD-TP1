@@ -8,6 +8,10 @@ import scipy.signal as ss
 
 
 class Signal:
+
+    timeTick = 0.0001
+    showingPeriods = 7
+
     def __init__(self, timeArray, description_text="", signal_type=4, ploting_type=0):
         self.yValues = []
         self.signalType = signal_type
@@ -83,6 +87,8 @@ class Signal:
 
     def create_dirac_signal(self):
         self.yValues = ss.unit_impulse(len(self.timeArray), 0)
+        self.signalType = SignalTypes.DELTA_DIRAC
+        self.period = 0.1
 
     # periodo en s y dutycicle de 0 a 1
     def create_square_signal(self, duty_cycle, period):
@@ -206,6 +212,18 @@ class Signal:
             f, X, N = self.compute_fft(time_interval, signal, period, n_periods=n_p, window=window)
             self.spectrum = f, X, N, window
             return f, X, N, window
+
+    def cut_first_period(self):
+        if self.signalType == SignalTypes.SINUSOIDAL:
+            elements_per_period = int(1 / Signal.timeTick)
+
+            for i in range(0, elements_per_period):
+                self.yValues[i] = self.yValues[i+2*elements_per_period]
+
+
+
+
+
 
     @staticmethod
     def get_window_types():

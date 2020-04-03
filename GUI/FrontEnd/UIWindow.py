@@ -30,7 +30,7 @@ class UIWindow(QMainWindow):
         self.minFreq = 1
         self.minPhase = 0
         self.minPeriod = 1
-        self.minDC = 1
+        self.minDC = 0,1
 
         self.__window_qt_configuration__()
 
@@ -275,7 +275,7 @@ class UIWindow(QMainWindow):
     def refresh_xin_clicked(self):
         self.errorLabel.setText('')
         if self.pulseRadio.isChecked():
-            time_array = np.arange(0, 1, 0.001)
+            time_array = np.arange(0, 1, Signal.timeTick)
             xin_signal = Signal(time_array)
             xin_signal.create_dirac_signal()
             xin_signal.add_description("Input: Impulso.")
@@ -296,7 +296,7 @@ class UIWindow(QMainWindow):
             phase_mult_text = self.param3Unit.currentText()
             phase_mult_value = self.phaseMultipliers[phase_mult_text]
 
-            time_array = np.arange(0, 7 / total_freq, 0.0001 * (1 / total_freq))
+            time_array = np.arange(0, Signal.showingPeriods  / total_freq, Signal.timeTick * (1 / total_freq))
             xin_signal = Signal(time_array)
 
             xin_signal.create_cos_signal(total_freq, amplitude * amplitude_mult_value,
@@ -321,7 +321,7 @@ class UIWindow(QMainWindow):
             phase_mult_text = self.param3Unit.currentText()
             phase_mult_value = self.phaseMultipliers[phase_mult_text]
 
-            time_array = np.arange(0, (7 * 3/2) / total_freq, 0.003 * ((3/2) / total_freq))
+            time_array = np.arange(0, (Signal.showingPeriods * 3/2) / total_freq, Signal.timeTick   / total_freq)
             xin_signal = Signal(time_array)
 
             xin_signal.create_half_sine_signal(total_freq, amplitude * amplitude_mult_value, 
@@ -345,7 +345,7 @@ class UIWindow(QMainWindow):
             phase_mult_text = self.param3Unit.currentText()
             phase_mult_value = self.phaseMultipliers[phase_mult_text]
 
-            time_array = np.arange(0, 7 * 5 / total_freq, 0.003 * (5 / total_freq))
+            time_array = np.arange(0, Signal.showingPeriods  * 5 / total_freq, Signal.timeTick  / total_freq)
             xin_signal = Signal(time_array)
             
             xin_signal.create_am_signal(total_freq, amplitude * amplitude_mult_value, 
@@ -368,7 +368,7 @@ class UIWindow(QMainWindow):
             period_mult_value = self.periodMultipliers[period_mult_text]
             total_period = period_value * period_mult_value
 
-            time_array = np.arange(0, 7 * total_period, 0.003 * 7 * total_period)
+            time_array = np.arange(0, Signal.showingPeriods  * total_period, Signal.timeTick   * total_period)
             xin_signal = Signal(time_array)
 
             xin_signal.create_exp_signal(vmax_v * vmax_unit_value, total_period)
