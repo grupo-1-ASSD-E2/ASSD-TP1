@@ -384,7 +384,6 @@ class UIWindow(QMainWindow):
             to_plot_signal = self.data.get_signal(SignalOrder.Xin.value)
             self.oscilloscope.add_signal_to_oscilloscope(to_plot_signal)
 
-
     def anti_alias_plot_clicked(self):
         if self.__check_input_exists__():
             to_plot_signal = self.data.get_signal(SignalOrder.AntiAliasOut.value)
@@ -395,7 +394,6 @@ class UIWindow(QMainWindow):
 
             self.oscilloscope.add_signal_to_oscilloscope(to_plot_signal)
 
-
     def sample_hold_plot_clicked(self):
         if self.__check_input_exists__() and self.__check_sample_signal_exists__():
             to_plot_signal = self.data.get_signal(SignalOrder.SampleAndHoldOut.value)
@@ -405,7 +403,6 @@ class UIWindow(QMainWindow):
             to_plot_signal.add_description(aux_signal_description)
 
             self.oscilloscope.add_signal_to_oscilloscope(to_plot_signal)
-
 
     def __check_input_exists__(self):
         error = True
@@ -437,7 +434,6 @@ class UIWindow(QMainWindow):
 
             self.oscilloscope.add_signal_to_oscilloscope(to_plot_signal)
 
-
     def xout_plot_clicked(self):
         if self.__check_input_exists__() and self.__check_sample_signal_exists__():
             to_plot_signal = self.data.get_signal(SignalOrder.XOut.value)
@@ -447,7 +443,6 @@ class UIWindow(QMainWindow):
             to_plot_signal.add_description(aux_signal_description)
 
             self.oscilloscope.add_signal_to_oscilloscope(to_plot_signal)
-
 
     def anti_alias_check_clicked(self):
         if self.antiAliasCheck.isChecked():
