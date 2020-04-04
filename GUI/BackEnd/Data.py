@@ -19,6 +19,8 @@ class Data:
         self.signals[0].copy_signal(xin)
         if self.samplingSignal is not None:
             self.samplingSignal.change_time_array(self.signals[0].timeArray)
+            self.blocks[BlockOrder.SampleAndHold.value].control_by_sampling_signal(self.samplingSignal)
+            self.blocks[BlockOrder.AnalogSwitch.value].control_by_sampling_signal(self.samplingSignal)
 
     def sampling_signal_changed(self, duty_cycle, period):
         if (self.blocks[BlockOrder.SampleAndHold.value].blockActivated and self.blocks[
