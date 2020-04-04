@@ -1,6 +1,10 @@
+import random
+
 from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUi
 import numpy as np
+from matplotlib.colors import hsv_to_rgb
+from matplotlib.cm import get_cmap
 from BackEnd.Signal import PlotTypes
 
 from BackEnd.Signal import Signal
@@ -13,6 +17,9 @@ class SpectrumAnalyzer(QMainWindow):
         self.program_state = {}
         self.plot_signals = []
         self.hidden = True
+        self.colorit = 0
+        self.colors = ['b', 'g', 'y', 'c', 'm', 'k', 'r']
+        self.currentMax = 0
 
     def closeEvent(self, event):
 
@@ -30,6 +37,7 @@ class SpectrumAnalyzer(QMainWindow):
         self.removeSignal.clicked.connect(self.remove_signal_from_spectrum_analyzer)
         self.removeAllSignals.clicked.connect(self.remove_all_signals_from_spectrum_analyzer)
         self.toggleSignal.clicked.connect(self.toggle_signal)
+
         self.plot_current_signals()
 
         self.show()
@@ -62,6 +70,7 @@ class SpectrumAnalyzer(QMainWindow):
         self.plot_current_signals()
 
     def remove_all_signals_from_spectrum_analyzer(self):
+
         self.plot_signals.clear()
         self.signalList.clear()
         self.plot_current_signals()
@@ -77,33 +86,47 @@ class SpectrumAnalyzer(QMainWindow):
         self.spectrumGraph.canvas.axes.grid(True, which="both")
 
         if signal.spectrumAnalyzerPlotActivated:
-
             freq_values = signal.spectrum[0]
             y_values = signal.spectrum[1]
 
-            #saca los ceros para no graficar de mas
-            for i in y_values:
-                if i == '0':
-                    y_values.pop(i)
-                    freq_values.pop(i)
-
             window = signal.spectrum[3]
-            '''
-            fo = (freq_values[2] - freq_values[1]) / 20
-            width = 30
-            if freq_values[1] != 0:
-                width = fo * freq_values / freq_values[1]'''
 
-            self.spectrumGraph.canvas.axes.scatter(freq_values, (np.abs(y_values) * 1 / signal.yValues.size),
-                                               label=signal.description + '. Ventana: ' + window,
-                                               )
-            self.spectrumGraph.canvas.axes.set_xlim( left=-10000, right=10000)
+            self.make_stem(self.spectrumGraph.canvas.axes, freq_values, (np.abs(y_values) * 1 / signal.yValues.size),
+                           label=signal.description + '. Ventana: ' + window)
+
+            self.spectrumGraph.canvas.axes.set_xlim(left=-10000, right=10000)
+
+        self.spectrumGraph.figure.tight_layout()
 
         self.spectrumGraph.canvas.axes.legend(loc='best')
 
-        self.spectrumGraph.canvas.draw()  # Redraw
+        self.spectrumGraph.canvas.draw()  # Redrawv
+
+    def make_stem(self, ax, x, y, label="", **kwargs):
+
+        label_text = label
+        ax.axhline(x[0], x[-1], 0, color='r')
+        color = self.get_next_color()
+        ax.vlines(x, 0, y, colors=color, label=label_text)
+        if y.max() > self.currentMax:
+            self.currentMax = y.max()
+        ax.set_ylim([1.05 * y.min(), 1.05 * self.currentMax])
+
+    def get_next_color(self):
+        if self.colorit < len(self.colors):
+            color = self.colors[self.colorit]
+            self.colorit += 1
+
+        else:
+            r = random.randrange(0, 10, 1) / 10
+            g = r / 2
+            b = random.randrange(0, 10, 1) / 10
+            color = (r, g, b)
+        return color
 
     def plot_current_signals(self):
+        self.colorit = 0
+        self.currentMax = 0
         self.spectrumGraph.canvas.axes.clear()
         self.spectrumGraph.figure.tight_layout()
         self.spectrumGraph.canvas.axes.set_xscale('linear')
@@ -116,22 +139,18 @@ class SpectrumAnalyzer(QMainWindow):
 
         for signal in self.plot_signals:
             if signal.spectrumAnalyzerPlotActivated:
-
                 freq_values = signal.spectrum[0]
                 y_values = signal.spectrum[1]
 
                 window = signal.spectrum[3]
-                '''
-                fo = (freq_values[2] - freq_values[1]) / 20
-                width = 30
-                if freq_values[1] != 0:
-                    width = fo * freq_values / freq_values[1]'''
 
-                self.spectrumGraph.canvas.axes.bar(freq_values, (np.abs(y_values) * 1 / signal.yValues.size),
-                                                   label=signal.description + '. Ventana: ' + window,
-                                                   width=40)
-                self.spectrumGraph.canvas.axes.set_xlim( left=-10000, right=10000)
+                self.make_stem(self.spectrumGraph.canvas.axes, freq_values,
+                               (np.abs(y_values) * 1 / signal.yValues.size),
+                               label=signal.description + '. Ventana: ' + window)
+
+                self.spectrumGraph.canvas.axes.set_xlim(left=-10000, right=10000)
 
         self.spectrumGraph.canvas.axes.legend(loc='best')
+        self.spectrumGraph.figure.tight_layout()
 
         self.spectrumGraph.canvas.draw()  # Redraws
