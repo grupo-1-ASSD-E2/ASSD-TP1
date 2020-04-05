@@ -20,13 +20,13 @@ class AntiAliasFilter(Filter):
         # {‘lowpass’, ‘highpass’, ‘bandpass’, ‘bandstop’}, optional
         self.filterType = 'lowpass'
         self.filter_order1 = 8
-        self.minAttStopBand_dB1 = 48
-        self.freqAtFirstMinAttWn1 = 2 * np.pi * 12
+        self.minAttStopBand_dB1 = 53
+        self.freqAtFirstMinAttWn1 = 2 * np.pi * 3.5
         self.filter_order2 = 8
-        self.minAttStopBand_dB2 = 48
+        self.minAttStopBand_dB2 = 53
         self.freqAtFirstMinAttWn2 = 2 * np.pi * 2700
         self.filter_order3 = 8
-        self.minAttStopBand_dB3 = 48
+        self.minAttStopBand_dB3 = 53
         self.freqAtFirstMinAttWn3 = 2 * np.pi * 375000
         self.analogFilter = True
 
