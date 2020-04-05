@@ -30,7 +30,7 @@ class UIWindow(QMainWindow):
         self.minFreq = 1
         self.minPhase = 0
         self.minPeriod = 1
-        self.minDC = 0.1
+        self.minDC = 1
 
         self.__window_qt_configuration__()
 
