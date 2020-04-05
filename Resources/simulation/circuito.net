@@ -1,0 +1,80 @@
+* D:\santi\facultad\3er año\2do cuatri\ASSD\GIT\ASSD-TP1\Resources\simulation\circuito.asc
+XX1 Vcc -Vcc N005 N001 high_freq
+XX2 Vcc -Vcc N005 N013 low_freq
+XX3 Vcc -Vcc N005 N009 med_freq
+V1 Vcc 0 15
+V2 -Vcc 0 -15
+V3 N005 0 SINE(0 5 240k 0 0 90)
+XU1 N001 Clk 0 -Vcc N006 N003 Vcc LF398H
+C1 N006 0 100p
+V4 Clk 0 PULSE(0 5 1n 1n 1n 1.1u 1.67u)
+XX4 Vcc -Vcc N002 N004 high_freq
+XX5 Vcc -Vcc N011 N012 low_freq
+XX6 Vcc -Vcc N007 N008 med_freq
+S1 N003 N002 N010 0 MySwitch
+R1 N002 0 1k
+A1 Clk N014 N014 N014 N014 N010 N014 N014 BUF
+V5 N014 0 0.5
+
+* block symbol definitions
+.subckt high_freq +V -V In Out
+XX5 In +V -V N001 doblet_buffer params: R=910 C=100p Cx=1n2 Ra=12k Rb=3k3
+XX6 N001 +V -V N002 doblet_buffer params: R=2k7 C=68p Cx=150p Ra=1k Rb=33k
+XX7 N002 +V -V N003 doblet_buffer params: R=7k5 C=47p Cx=33p Ra=1k Rb=100k
+XX8 N003 +V -V Out doblet_buffer params: R=1k C=390p Cx=180p Ra=3k Rb=22k
+.ends high_freq
+
+.subckt low_freq +V -V In Out
+XX1 In +V -V N001 doblet params: R=100k C=82n Cx=1u Ra=12k Rb=3k3
+XX2 N001 +V -V N002 doblet params: R=110k C=220n Cx=330n Ra=1k Rb=33k
+XX3 N002 +V -V N003 doblet params: R=110k C=330n Cx=220n Ra=1k Rb=100k
+XX4 N003 +V -V Out doblet params: R=110k C=390n Cx=180n Ra=3k Rb=22k
+.ends low_freq
+
+.subckt med_freq +V -V In Out
+XX1 In +V -V N001 doblet params: R=110k C=100p Cx=1n2 Ra=12k Rb=3k3
+XX2 N001 +V -V N002 doblet params: R=100k C=330p Cx=470p Ra=1k Rb=33k
+XX3 N002 +V -V N003 doblet params: R=150k C=330p Cx=220p Ra=1k Rb=100k
+XX4 N003 +V -V Out doblet params: R=180k C=330p Cx=150p Ra=3k Rb=22k
+.ends med_freq
+
+.subckt doblet_buffer In +V -V Out
+XU1 N003 N005 +V -V Out ADTL082
+R1 N003 N006 {R}
+R2 N006 N001 {R}
+R3 Out N002 {R/2}
+C1 N002 N001 {C}
+C2 N003 N002 {C}
+C3 0 N003 {Cx}
+C4 N006 Out {C*2}
+R4 Out N005 {Ra}
+R5 0 N005 {Rb}
+R6 0 N004 {Rb}
+R7 In N004 {Ra}
+XU2 N004 N001 +V -V N001 ADTL082
+.param R=100k C=82n Cx=1u Ra=12k Rb=3k3
+.ends doblet_buffer
+
+.subckt doblet In +V -V Out
+XU1 N003 N004 +V -V Out ADTL082
+R1 N003 N005 {R}
+R2 N005 N001 {R}
+R3 Out N002 {R/2}
+C1 N002 N001 {C}
+C2 N003 N002 {C}
+C3 0 N003 {Cx}
+C4 N005 Out {C*2}
+R4 Out N004 {Ra}
+R5 0 N004 {Rb}
+R6 0 N001 {Rb}
+R7 In N001 {Ra}
+.param R=100k C=82n Cx=1u Ra=12k Rb=3k3
+.ends doblet
+
+.tran 0 40u 20u
+.include LF398.sub
+.model MySwitch SW(Ron=180 Roff=1Meg Vt=1)
+.model SW SW()
+.lib ADI.lib
+.backanno
+.end
