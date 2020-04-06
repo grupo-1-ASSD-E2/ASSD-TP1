@@ -51,12 +51,12 @@ class AntiAliasFilter(Filter):
         returning_signal = Signal(None)
         returning_signal.copy_signal(signal_in)
         if self.blockActivated:
-            if 1/signal_in.period <= 8 :
+            if 1/signal_in.period <= 3.75 :
                 tout, y, ni = signal.lsim((self.b1, self.a1), signal_in.yValues, signal_in.timeArray)
 
                 returning_signal.set_x_y_values(tout, y)
                 returning_signal.cut_first_period() #Elimina transitorio
-            elif 1800 >= 1/signal_in.period > 8:
+            elif 2700 >= 1/signal_in.period > 3.75:
                 tout, y, ni = signal.lsim((self.b2, self.a2), signal_in.yValues, signal_in.timeArray)
 
                 returning_signal.set_x_y_values(tout, y)

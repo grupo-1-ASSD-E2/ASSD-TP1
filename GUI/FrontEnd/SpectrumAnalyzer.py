@@ -97,7 +97,7 @@ class SpectrumAnalyzer(QMainWindow):
                            (np.abs(y_values) * 1 / signal.yValues.size),
                            label=signal.description + '. Ventana: ' + window)
 
-            self.spectrumGraph.canvas.axes.set_xlim(left=-max_x, right=max_x)
+            self.spectrumGraph.canvas.axes.set_xlim(left=-max_x*1.1, right=max_x*1.1)
 
         self.spectrumGraph.figure.tight_layout()
 
@@ -116,7 +116,7 @@ class SpectrumAnalyzer(QMainWindow):
         ax.set_ylim([1.05 * y.min(), 1.05 * self.currentMax])
 
     def find_max(self, x_array, y):
-        min_y = 1e-4
+        min_y = 1e-3
         max_x = 100
         x = 0
         for i in range(0, len(x_array)):
@@ -166,7 +166,7 @@ class SpectrumAnalyzer(QMainWindow):
                                label=signal.description + '. Ventana: ' + window)
 
 
-                self.spectrumGraph.canvas.axes.set_xlim(left=-max_x, right=max_x)
+                self.spectrumGraph.canvas.axes.set_xlim(left=-max_x*1.1, right=max_x*1.1)
 
         self.spectrumGraph.canvas.axes.legend(loc='best')
         self.spectrumGraph.figure.tight_layout()
