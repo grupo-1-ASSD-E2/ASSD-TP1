@@ -166,6 +166,11 @@
                 <widget class="QComboBox" name="param1Unit">
                  <item>
                   <property name="text">
+                   <string>mV</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
                    <string>V</string>
                   </property>
                  </item>
@@ -383,7 +388,7 @@ font-size: 18px
               <enum>Qt::AutoText</enum>
              </property>
              <property name="pixmap">
-              <pixmap>../../../../../../../../pabli/Desktop/pwm.jpg</pixmap>
+              <pixmap>../../../../pabli/Desktop/pwm.jpg</pixmap>
              </property>
              <property name="scaledContents">
               <bool>true</bool>
