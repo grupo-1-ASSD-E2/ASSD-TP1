@@ -275,7 +275,7 @@ class UIWindow(QMainWindow):
     def refresh_xin_clicked(self):
         self.errorLabel.setText('')
         if self.pulseRadio.isChecked():
-            time_array = np.arange(0, 1, 1/Signal.timeTick)
+            time_array = np.linspace(0, 1, 1/Signal.timeTick)
             xin_signal = Signal(time_array)
             xin_signal.create_dirac_signal()
             xin_signal.add_description("Input: Impulso.")

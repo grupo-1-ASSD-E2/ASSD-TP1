@@ -97,6 +97,8 @@ class SpectrumAnalyzer(QMainWindow):
                            (np.abs(y_values) * 1 / signal.yValues.size),
                            label=signal.description + '. Ventana: ' + window)
 
+            if max_x == 0:
+                max_x = 10000
             self.spectrumGraph.canvas.axes.set_xlim(left=-max_x*1.1, right=max_x*1.1)
 
         self.spectrumGraph.figure.tight_layout()
@@ -165,7 +167,8 @@ class SpectrumAnalyzer(QMainWindow):
                                (np.abs(y_values) * 1 / signal.yValues.size),
                                label=signal.description + '. Ventana: ' + window)
 
-
+                if max_x == 0:
+                    max_x = 10000
                 self.spectrumGraph.canvas.axes.set_xlim(left=-max_x*1.1, right=max_x*1.1)
 
         self.spectrumGraph.canvas.axes.legend(loc='best')
