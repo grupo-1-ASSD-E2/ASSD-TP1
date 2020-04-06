@@ -68,7 +68,7 @@ class UIWindow(QMainWindow):
         self.frequencyMultipliers = {"Hz": 1,
                                      "kHz": 1000,
                                      "MHz": 1000000,
-                                     "GHz": 1000000000}
+                                     }
         self.tensionMultipliers = {"mV": 1 / 1000,
                                    "V": 1}
         self.phaseMultipliers = {"°": 1}

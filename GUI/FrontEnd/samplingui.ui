@@ -214,11 +214,6 @@
                    <string>MHz</string>
                   </property>
                  </item>
-                 <item>
-                  <property name="text">
-                   <string>GHz</string>
-                  </property>
-                 </item>
                 </widget>
                </item>
               </layout>
