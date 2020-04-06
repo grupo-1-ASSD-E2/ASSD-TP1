@@ -10,7 +10,7 @@ import scipy.signal as ss
 class Signal:
 
     timeTick = 10000
-    showingPeriods = 10
+    showingPeriods = 7
 
     def __init__(self, timeArray, description_text="", signal_type=4, ploting_type=0):
         self.yValues = []
