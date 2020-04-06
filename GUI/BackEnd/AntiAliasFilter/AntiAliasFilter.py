@@ -21,7 +21,7 @@ class AntiAliasFilter(Filter):
         self.filterType = 'lowpass'
         self.filter_order1 = 8
         self.minAttStopBand_dB1 = 53
-        self.freqAtFirstMinAttWn1 = 2 * np.pi * 3.5
+        self.freqAtFirstMinAttWn1 = 2 * np.pi * 3.75
         self.filter_order2 = 8
         self.minAttStopBand_dB2 = 53
         self.freqAtFirstMinAttWn2 = 2 * np.pi * 2700
