@@ -26,7 +26,7 @@ class AntiAliasFilter(Filter):
         self.minAttStopBand_dB2 = 53
         self.freqAtFirstMinAttWn2 = 2 * np.pi * 2700
         self.filter_order3 = 8
-        self.minAttStopBand_dB3 = 53
+        self.minAttStopBand_dB3 =53
         self.freqAtFirstMinAttWn3 = 2 * np.pi * 375000
         self.analogFilter = True
 
@@ -44,6 +44,8 @@ class AntiAliasFilter(Filter):
 
 
 
+
+
     def deactivate_block(self, deactivate):
         self.blockActivated = not deactivate
 
@@ -54,17 +56,17 @@ class AntiAliasFilter(Filter):
             if 1/signal_in.period <= 3.75 :
                 tout, y, ni = signal.lsim((self.b1, self.a1), signal_in.yValues, signal_in.timeArray)
 
-                returning_signal.set_x_y_values(tout, y)
+                returning_signal.set_x_y_values(signal_in.timeArray, y)
                 returning_signal.cut_first_period() #Elimina transitorio
             elif 2700 >= 1/signal_in.period > 3.75:
                 tout, y, ni = signal.lsim((self.b2, self.a2), signal_in.yValues, signal_in.timeArray)
 
-                returning_signal.set_x_y_values(tout, y)
+                returning_signal.set_x_y_values(signal_in.timeArray, y)
                 returning_signal.cut_first_period()
             else:
                 tout, y, ni = signal.lsim((self.b3, self.a3), signal_in.yValues, signal_in.timeArray)
 
-                returning_signal.set_x_y_values(tout, y)
+                returning_signal.set_x_y_values(signal_in.timeArray, y)
                 returning_signal.cut_first_period()
         return returning_signal
 

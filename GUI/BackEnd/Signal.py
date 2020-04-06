@@ -1,8 +1,5 @@
 from enum import Enum
-import numpy as np
-import matplotlib.pyplot as plt
 from decimal import Decimal
-from scipy import signal as ss
 import numpy as np
 import scipy.signal as ss
 
@@ -61,6 +58,7 @@ class Signal:
     def create_cos_signal(self, hz_frequency, amplitude, phase=0):
 
         self.yValues = amplitude * np.cos(self.timeArray * 2 * np.pi * hz_frequency + phase)
+
         self.signalType = SignalTypes.SINUSOIDAL
         self.period = 1 / hz_frequency
 
