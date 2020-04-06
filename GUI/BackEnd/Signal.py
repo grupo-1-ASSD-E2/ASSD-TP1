@@ -10,7 +10,7 @@ import scipy.signal as ss
 class Signal:
 
     timeTick = 0.00006
-    showingPeriods = 4
+    showingPeriods = 10
 
     def __init__(self, timeArray, description_text="", signal_type=4, ploting_type=0):
         self.yValues = []
@@ -218,7 +218,7 @@ class Signal:
             elements_per_period = int(1 / Signal.timeTick)
 
             for i in range(0, elements_per_period):
-                self.yValues[i] = self.yValues[i+2*elements_per_period]
+                self.yValues[i] = self.yValues[i+1*elements_per_period]
 
 
 
