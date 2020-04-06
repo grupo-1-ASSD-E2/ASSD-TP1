@@ -9,7 +9,7 @@ import scipy.signal as ss
 
 class Signal:
 
-    timeTick = 0.0001
+    timeTick = 10000
     showingPeriods = 10
 
     def __init__(self, timeArray, description_text="", signal_type=4, ploting_type=0):
@@ -215,7 +215,7 @@ class Signal:
 
     def cut_first_period(self):
         if self.signalType == SignalTypes.SINUSOIDAL or self.signalType == SignalTypes.EXPONENTIAL:
-            elements_per_period = int(1 / Signal.timeTick)
+            elements_per_period = int( Signal.timeTick)
 
             for i in range(0, 2*elements_per_period):
                 self.yValues[i] = self.yValues[i+2*elements_per_period]
