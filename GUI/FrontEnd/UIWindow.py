@@ -65,10 +65,11 @@ class UIWindow(QMainWindow):
         self.recupCheck.clicked.connect(self.recup_check_clicked)
         self.analogCheck.clicked.connect(self.analog_check_clicked)
 
-        self.frequencyMultipliers = {"Hz": 1,
+        self.frequencyMultipliers = {"mHz": 0.001,
+                                    "Hz": 1,
                                      "kHz": 1000,
                                      "MHz": 1000000,
-                                     "GHz": 1000000000}
+                                     }
         self.tensionMultipliers = {"mV": 1 / 1000,
                                    "V": 1}
         self.phaseMultipliers = {"°": 1}
@@ -268,14 +269,19 @@ class UIWindow(QMainWindow):
         if error:
             self.errorLabel.setText("Primero ingresa una señal de entrada")
         else:
-            self.data.sampling_signal_changed(self.dcValue.value(),
-                                              self.periodValue.value() * self.periodMultipliers[
-                                                  self.periodUnit.currentText()])
+            total_period =  self.periodValue.value() * self.periodMultipliers[
+                                                  self.periodUnit.currentText()]
+            error2 = not self.data.valid_sampling_period(total_period)
+            if error2:
+                self.errorLabel.setText("Ingrese un período valido")
+            else:
+                self.data.sampling_signal_changed(self.dcValue.value(),total_period
+                                             )
 
     def refresh_xin_clicked(self):
         self.errorLabel.setText('')
         if self.pulseRadio.isChecked():
-            time_array = np.linspace(0, 1, 1/Signal.timeTick)
+            time_array = np.linspace(0, 1, Signal.timeTick)
             xin_signal = Signal(time_array)
             xin_signal.create_dirac_signal()
             xin_signal.add_description("Input: Impulso.")
@@ -296,7 +302,7 @@ class UIWindow(QMainWindow):
             phase_mult_text = self.param3Unit.currentText()
             phase_mult_value = self.phaseMultipliers[phase_mult_text]
 
-            time_array = np.linspace(0, Signal.showingPeriods  / total_freq,  Signal.showingPeriods/Signal.timeTick )
+            time_array = np.linspace(0, Signal.showingPeriods  / total_freq,  Signal.showingPeriods*Signal.timeTick )
             xin_signal = Signal(time_array)
 
             xin_signal.create_cos_signal(total_freq, amplitude * amplitude_mult_value,
@@ -321,7 +327,7 @@ class UIWindow(QMainWindow):
             phase_mult_text = self.param3Unit.currentText()
             phase_mult_value = self.phaseMultipliers[phase_mult_text]
 
-            time_array = np.linspace(0, (Signal.showingPeriods * 3/2) / total_freq, Signal.showingPeriods/Signal.timeTick )
+            time_array = np.linspace(0, (Signal.showingPeriods * 3/2) / total_freq, Signal.showingPeriods*Signal.timeTick )
             xin_signal = Signal(time_array)
 
             xin_signal.create_half_sine_signal(total_freq, amplitude * amplitude_mult_value, 
@@ -345,7 +351,7 @@ class UIWindow(QMainWindow):
             phase_mult_text = self.param3Unit.currentText()
             phase_mult_value = self.phaseMultipliers[phase_mult_text]
 
-            time_array = np.linspace(0, Signal.showingPeriods  * 5 / total_freq, Signal.showingPeriods/Signal.timeTick )
+            time_array = np.linspace(0, Signal.showingPeriods  * 5 / total_freq, Signal.showingPeriods*Signal.timeTick )
             xin_signal = Signal(time_array)
             
             xin_signal.create_am_signal(total_freq, amplitude * amplitude_mult_value, 
@@ -368,7 +374,7 @@ class UIWindow(QMainWindow):
             period_mult_value = self.periodMultipliers[period_mult_text]
             total_period = period_value * period_mult_value
 
-            time_array = np.linspace(0, Signal.showingPeriods * total_period,Signal.showingPeriods/Signal.timeTick)
+            time_array = np.linspace(0, Signal.showingPeriods * total_period,Signal.showingPeriods*Signal.timeTick)
             xin_signal = Signal(time_array)
 
             xin_signal.create_exp_signal(vmax_v * vmax_unit_value, total_period)

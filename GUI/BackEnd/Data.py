@@ -33,6 +33,11 @@ class Data:
         self.blocks[BlockOrder.SampleAndHold.value].control_by_sampling_signal(self.samplingSignal)
         self.blocks[BlockOrder.AnalogSwitch.value].control_by_sampling_signal(self.samplingSignal)
 
+    def valid_sampling_period(self, period):
+        signal_period = self.signals[0].period
+        if signal_period/1000 <= period <= signal_period*2:
+            return True
+        return False
     def add_signal(self, signal, signal_order):
         new_aux = Signal(signal.timeArray)
         new_aux.copy_signal(signal)
