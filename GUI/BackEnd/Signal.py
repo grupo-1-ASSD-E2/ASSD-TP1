@@ -215,8 +215,8 @@ class Signal:
         if self.signalType == SignalTypes.SINUSOIDAL or self.signalType == SignalTypes.EXPONENTIAL:
             elements_per_period = int( Signal.timeTick)
 
-            for i in range(0, 2*elements_per_period):
-                self.yValues[i] = self.yValues[i+2*elements_per_period]
+            for i in range(0, 3*elements_per_period):
+                self.yValues[i] = self.yValues[i+3*elements_per_period]
             '''
             for l in range(elements_per_period*(self.showingPeriods - 3), elements_per_period * self.showingPeriods):
                 self.yValues[i] = self.yValues[i - 4 * elements_per_period]'''
