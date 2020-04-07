@@ -65,7 +65,8 @@ class UIWindow(QMainWindow):
         self.recupCheck.clicked.connect(self.recup_check_clicked)
         self.analogCheck.clicked.connect(self.analog_check_clicked)
 
-        self.frequencyMultipliers = {"Hz": 1,
+        self.frequencyMultipliers = {"mHz": 0.001,
+                                    "Hz": 1,
                                      "kHz": 1000,
                                      "MHz": 1000000,
                                      }
