@@ -25,7 +25,7 @@ class AntiAliasFilter(Filter):
         self.filter_order2 = 8
         self.minAttStopBand_dB2 = 53
         self.freqAtFirstMinAttWn2 = 2 * np.pi * 2700
-        self.filter_order3 = 8
+        self.filter_order3 = 6
         self.minAttStopBand_dB3 =53
         self.freqAtFirstMinAttWn3 = 2 * np.pi * 375000
         self.analogFilter = True
