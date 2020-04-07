@@ -268,9 +268,14 @@ class UIWindow(QMainWindow):
         if error:
             self.errorLabel.setText("Primero ingresa una señal de entrada")
         else:
-            self.data.sampling_signal_changed(self.dcValue.value(),
-                                              self.periodValue.value() * self.periodMultipliers[
-                                                  self.periodUnit.currentText()])
+            total_period =  self.periodValue.value() * self.periodMultipliers[
+                                                  self.periodUnit.currentText()]
+            error2 = not self.data.valid_sampling_period(total_period)
+            if error2:
+                self.errorLabel.setText("Ingrese un período valido")
+            else:
+                self.data.sampling_signal_changed(self.dcValue.value(),total_period
+                                             )
 
     def refresh_xin_clicked(self):
         self.errorLabel.setText('')

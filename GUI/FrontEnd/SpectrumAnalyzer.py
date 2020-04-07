@@ -91,7 +91,7 @@ class SpectrumAnalyzer(QMainWindow):
 
             window = signal.spectrum[3]
 
-            max_x = self.find_max(freq_values, y_values)
+            max_x = self.find_max(freq_values, y_values* 1 / signal.yValues.size)
 
             self.make_stem(self.spectrumGraph.canvas.axes, freq_values,
                            (np.abs(y_values) * 1 / signal.yValues.size),
@@ -118,7 +118,7 @@ class SpectrumAnalyzer(QMainWindow):
         ax.set_ylim([1.05 * y.min(), 1.05 * self.currentMax])
 
     def find_max(self, x_array, y):
-        min_y = 1e-3
+        min_y = 1e-6
         max_x = 100
         x = 0
         for i in range(0, len(x_array)):
@@ -161,7 +161,7 @@ class SpectrumAnalyzer(QMainWindow):
 
                 window = signal.spectrum[3]
 
-                max_x = self.find_max(freq_values, y_values)
+                max_x = self.find_max(freq_values, y_values* 1 / signal.yValues.size)
 
                 self.make_stem(self.spectrumGraph.canvas.axes, freq_values,
                                (np.abs(y_values) * 1 / signal.yValues.size),

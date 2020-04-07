@@ -2,12 +2,12 @@ from enum import Enum
 from decimal import Decimal
 import numpy as np
 import scipy.signal as ss
+import matplotlib.pyplot as plt
 
 
 class Signal:
-
-    timeTick = 10000
-    showingPeriods = 7
+    timeTick = 100000
+    showingPeriods = 4
 
     def __init__(self, timeArray, description_text="", signal_type=4, ploting_type=0):
         self.yValues = []
@@ -19,7 +19,7 @@ class Signal:
         self.spectrumAnalyzerPlotActivated = True  # Permite togglear una senal en el analizador de espectro
         self.period = -1
         self.duty_cycle = 1
-        self.spectrum = None #f, X, N, window
+        self.spectrum = None  # f, X, N, window
 
     def copy_signal(self, signal):
         self.yValues = signal.yValues.copy()
@@ -90,8 +90,10 @@ class Signal:
 
     # periodo en s y dutycicle de 0 a 1
     def create_square_signal(self, duty_cycle, period):
+        self.yValues = []
         self.yValues = (0.5 * ss.square(2 * np.pi * self.timeArray * 1 / period,
                                         duty_cycle / 100) + 0.5)  # Los 0.5 hacen que quede entre 0 y 1
+
         self.period = period
         self.duty_cycle = duty_cycle
         self.signalType = SignalTypes.SQUARE
@@ -119,8 +121,9 @@ class Signal:
         return res
 
     def create_am_signal(self, hz_frequency, amplitude, phase=0):
-        self.yValues = amplitude *( 1 / 2 * np.cos(self.timeArray * 2 * np.pi * 1.8 * hz_frequency + phase) + 
-                        np.cos(self.timeArray * 2 * np.pi * 2 * hz_frequency + phase) + 1 / 2 * np.cos(self.timeArray * 2 * np.pi * 2.2 * hz_frequency + phase) )
+        self.yValues = amplitude * (1 / 2 * np.cos(self.timeArray * 2 * np.pi * 1.8 * hz_frequency + phase) +
+                                    np.cos(self.timeArray * 2 * np.pi * 2 * hz_frequency + phase) + 1 / 2 * np.cos(
+                    self.timeArray * 2 * np.pi * 2.2 * hz_frequency + phase))
         self.signalType = SignalTypes.AM
         self.period = 5 / hz_frequency
 
@@ -167,7 +170,7 @@ class Signal:
 
         return f, fft, N
 
-    def fft(self, mode='fast', window = 'Automática'):
+    def fft(self, mode='fast', window='Automática'):
         ''' time_interval: array containing time values for the signal meant to be transformed.
 
             signal: array containing signal meant to be transformed.
@@ -213,23 +216,18 @@ class Signal:
 
     def cut_first_period(self):
         if self.signalType == SignalTypes.SINUSOIDAL or self.signalType == SignalTypes.EXPONENTIAL:
-            elements_per_period = int( Signal.timeTick)
+            elements_per_period = int(Signal.timeTick)
 
-            for i in range(0, 3*elements_per_period):
-                self.yValues[i] = self.yValues[i+3*elements_per_period]
+            for i in range(0, 2 * elements_per_period):
+                self.yValues[i] = self.yValues[i + 2 * elements_per_period]
             '''
             for l in range(elements_per_period*(self.showingPeriods - 3), elements_per_period * self.showingPeriods):
                 self.yValues[i] = self.yValues[i - 4 * elements_per_period]'''
 
-
-
-
-
-
     @staticmethod
     def get_window_types():
         return ['Boxcar', 'Barthann', 'Bartlett', 'Hanning', 'Hamming', 'Tukey', 'Hann', 'Nuttall', 'Parzen',
-                        'Cosine', 'Blackman', 'Bohman', 'Blackmanharris']
+                'Cosine', 'Blackman', 'Bohman', 'Blackmanharris']
 
 
 class SignalTypes(Enum):
