@@ -201,6 +201,11 @@
                 <widget class="QComboBox" name="param2Unit">
                  <item>
                   <property name="text">
+                   <string>mHz</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
                    <string>Hz</string>
                   </property>
                  </item>
